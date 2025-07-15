@@ -1,41 +1,83 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "../components/gallery/gallery.css";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getGalleryPosts } from "../helper/apis";
 import { toast } from "react-toastify";
 
+const POSTS_PER_PAGE = 12;
+
 const Gallery = () => {
+  const { search } = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(search);
+  const pageParam = parseInt(queryParams.get("page"), 10);
+
   const [gallery, setGallery] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [visiblePosts, setVisiblePosts] = useState(9);
+  const [currentPage, setCurrentPage] = useState(pageParam || 1);
+  const [totalPages, setTotalPages] = useState(1);
 
-  const loadMorePosts = () => {
-    setVisiblePosts((prevVisiblePosts) => prevVisiblePosts + 8);
-  };
+  const fetchPictures = useCallback(async () => {
+    document.title = "టీ టైం తెలుగు - గ్యాలరీ";
+    setIsLoading(true);
+    try {
+      const res = await getGalleryPosts(currentPage, POSTS_PER_PAGE);
+      if (res?.status === "success") {
+        setGallery(res?.gallery || []);
+        setTotalPages(Math.ceil((res?.total || 0) / POSTS_PER_PAGE));
+      } else {
+        toast.error(res?.message || "Something went wrong!");
+      }
+    } catch (error) {
+      toast.error("Something went wrong!");
+      console.error("Error fetching gallery posts:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage]);
 
   useEffect(() => {
-    const fetchPictures = async () => {
-      document.title = "టీ టైం తెలుగు - గ్యాలరీ";
-      setIsLoading(true);
-      try {
-        const res = await getGalleryPosts();
-        if (res?.status === "success") {
-          setGallery(res?.gallery || []);
-        } else {
-          toast.error(res?.message || "Something went wrong!");
-        }
-        setIsLoading(false);
-      } catch (error) {
-        toast.error("Something went wrong!");
-        setIsLoading(false);
-        console.error("Error fetching gallery posts:", error);
-      }
-    };
-
     fetchPictures();
-  }, []);
+    window.scrollTo(0, 0);
+  }, [fetchPictures]);
+
+  useEffect(() => {
+    if (!isNaN(pageParam) && pageParam > 0) {
+      setCurrentPage(pageParam);
+    } else {
+      setCurrentPage(1);
+    }
+  }, [pageParam]);
+
+  const goToPage = (page) => {
+    const validPage = Math.max(1, Math.min(page, totalPages));
+    navigate(`/gallery?page=${validPage}`);
+  };
+
+  const handlePrevious = () => goToPage(currentPage - 1);
+  const handleNext = () => goToPage(currentPage + 1);
+
+  const renderPagination = () => (
+    <div className="news-pagenations">
+      <div className="news-page-count">
+        {totalPages > 1 && (
+          <span onClick={handlePrevious}>
+            <i className="fa fa-angle-left"></i>
+          </span>
+        )}
+        <span className="currentPage-text">
+          Page {currentPage} of {totalPages}
+        </span>
+        {totalPages > 1 && (
+          <span onClick={handleNext}>
+            <i className="fa fa-angle-right"></i>
+          </span>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <>
@@ -44,10 +86,11 @@ const Gallery = () => {
         <div className="gallery-title-container">
           <h1 className="text-capital">గ్యాలరీ</h1>
         </div>
+
         {!isLoading ? (
           <div className="gallery-section">
-            {gallery.length > 0 &&
-              gallery?.slice(0, visiblePosts)?.map((item) => (
+            {gallery.length > 0 ? (
+              gallery.map((item) => (
                 <Link
                   to={`/gallery/${item?._id}`}
                   className="gallery-card"
@@ -66,7 +109,10 @@ const Gallery = () => {
                   </div>
                   <span className="gallery-name">{item?.name}</span>
                 </Link>
-              ))}
+              ))
+            ) : (
+              <p>No posts found in gallery.</p>
+            )}
           </div>
         ) : (
           <div className="gallery-section">
@@ -82,14 +128,8 @@ const Gallery = () => {
             ))}
           </div>
         )}
-        {visiblePosts < gallery?.length && (
-          <button className="load-more-btn" onClick={loadMorePosts}>
-            <span className="btn-text">Load More</span>
-            <span className="btn-icon">
-              <i className="fa-solid fa-arrow-rotate-right"></i>
-            </span>
-          </button>
-        )}
+
+        {renderPagination()}
       </div>
       <Footer />
     </>

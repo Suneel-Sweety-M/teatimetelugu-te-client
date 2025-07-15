@@ -232,6 +232,23 @@ export const getGalleryPosts = async () => {
   }
 };
 
+export const loadGalleryPosts = async (page = 1, limit = 12) => {
+  try {
+    const query = new URLSearchParams();
+    query.append("page", page);
+    query.append("limit", limit);
+
+    const res = await apiRequest({
+      url: `/gallery/posts?${query.toString()}`,
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getFilteredGallery = async (category, time, searchText) => {
   const url =
     category || time || searchText
@@ -332,11 +349,51 @@ export const getSearchNews = async (q) => {
   }
 };
 
+// helper/apis.js
+export const getSearchNewsTelugu = async (q, skip = 0, limit = 9) => {
+  try {
+    const res = await apiRequest({
+      url: `/news/search?q=${encodeURIComponent(q)}&skip=${skip}&limit=${limit}`,
+      method: "GET",
+    });
+    return res;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 export const getFilteredNewsPosts = async (category, subcategory) => {
   try {
     const url = `/news?category=${category}${
       subcategory ? `&subcategory=${subcategory}` : ""
     }`;
+
+    const res = await apiRequest({
+      url,
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCategoryNewsPosts = async (
+  category,
+  subcategory,
+  currentPage,
+  POSTS_PER_PAGE
+) => {
+  try {
+    const query = new URLSearchParams();
+
+    if (category) query.append("category", category);
+    if (subcategory) query.append("subcategory", subcategory);
+    if (currentPage) query.append("page", currentPage);
+    if (POSTS_PER_PAGE) query.append("limit", POSTS_PER_PAGE);
+
+    const url = `/news/category?${query.toString()}`;
 
     const res = await apiRequest({
       url,
@@ -744,6 +801,19 @@ export const getAllCategoryVideos = async () => {
   try {
     const res = await apiRequest({
       url: "/videos/all",
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getPaginatedCategoryVideos = async (params) => {
+  try {
+    const res = await apiRequest({
+      url: `/videos/category?${new URLSearchParams(params).toString()}`,
       method: "GET",
     });
 

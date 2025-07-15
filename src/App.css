@@ -605,8 +605,7 @@ textarea {
 .news-pagenations {
   display: flex;
   justify-content: center;
-  margin: 30px 0;
-  padding: 0 15px;
+  padding: 30px 15px;
 }
 
 .news-page-count {
