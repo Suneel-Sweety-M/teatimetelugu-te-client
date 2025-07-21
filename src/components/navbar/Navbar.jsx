@@ -96,6 +96,7 @@ const Navbar = () => {
       }
 
       navigate(`/search?q=${encodeURIComponent(searchText)}`);
+      setIsMobileMenuOpen(false);
     } catch (error) {
       console.error("Error during search submission:", error);
     }
@@ -309,14 +310,13 @@ const Navbar = () => {
             <a href="https://ntnews.com" target="blank" className="nls-logo">
               <img src="/logos/nt.jpg" alt="" />
             </a>
-            <span
-              onClick={() =>
-                setYTurl("https://www.youtube.com/embed/KvZIEgHfscU")
-              }
+            <a
+              href="https://www.youtube.com/watch?v=ZeukNjINwjo"
+              target="blank"
               className="nls-logo cp"
             >
               <img src="/logos/etv.jpg" alt="" />
-            </span>
+            </a>
             <span
               onClick={() =>
                 setYTurl("https://www.youtube.com/embed/II_m28Bm-iM")
@@ -424,7 +424,7 @@ const Navbar = () => {
                   to="/"
                   className={`mobile-navbar-link ${
                     isActive("/") ? "active-tab" : ""
-                  }`}
+                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>హోమ్</span>
                 </Link>
@@ -432,7 +432,7 @@ const Navbar = () => {
                   to="/politics"
                   className={`mobile-navbar-link ${
                     isActive("/politics") ? "active-tab" : ""
-                  }`}
+                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>రాజకీయ</span>
                 </Link>
@@ -440,7 +440,7 @@ const Navbar = () => {
                   to="/movies"
                   className={`mobile-navbar-link ${
                     isActive("/movies") ? "active-tab" : ""
-                  }`}
+                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>సినిమా</span>
                 </Link>
@@ -448,7 +448,7 @@ const Navbar = () => {
                   to="/gossips"
                   className={`mobile-navbar-link ${
                     isActive("/gossips") ? "active-tab" : ""
-                  }`}
+                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>గాసిప్స్</span>
                 </Link>
@@ -456,7 +456,7 @@ const Navbar = () => {
                   to="/reviews"
                   className={`mobile-navbar-link ${
                     isActive("/reviews") ? "active-tab" : ""
-                  }`}
+                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>రివ్యూస్</span>
                 </Link>
@@ -464,7 +464,7 @@ const Navbar = () => {
                   to="/gallery"
                   className={`mobile-navbar-link ${
                     isActive("/gallery") ? "active-tab" : ""
-                  }`}
+                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>గ్యాలరీ</span>
                 </Link>
@@ -472,7 +472,7 @@ const Navbar = () => {
                   to="/videos"
                   className={`mobile-navbar-link ${
                     isActive("/videos") ? "active-tab" : ""
-                  }`}
+                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>వీడియోలు</span>
                 </Link>
@@ -480,7 +480,7 @@ const Navbar = () => {
                   to="/ott"
                   className={`mobile-navbar-link ${
                     isActive("/ott") ? "active-tab" : ""
-                  }`}
+                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>ఓటిటి</span>
                 </Link>
@@ -491,6 +491,7 @@ const Navbar = () => {
                   <Link
                     to={`/${user?._id}/dashboard`}
                     className="mobile-navbar-link mobile-navbar-link--blue"
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   >
                     <span>Dashboard</span>
                   </Link>
