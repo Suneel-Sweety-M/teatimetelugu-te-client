@@ -28,6 +28,8 @@ const DashboardSidebar = ({ setBars }) => {
   }
   }, [navigate, uid, user]);
 
+  document.title = `Dashboard | టీ టైం తెలుగు`;
+
   return (
     <div className="das-sidebar">
       <Link to="/" className="sidebar-logo">

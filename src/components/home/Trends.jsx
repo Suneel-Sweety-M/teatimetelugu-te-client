@@ -97,7 +97,7 @@ const Trends = () => {
             </Link>
           </div>
           <div className="trends-right">
-            {otherTrends.slice(1, 5).map((item, index) => (
+            {otherTrends.slice(0, 4).map((item, index) => (
               <Link
                 to={`/${item?.category}/${item?._id}`}
                 className="trends-post cp"

@@ -12,7 +12,7 @@ const GridView = () => {
     try {
       const res = await getTrendsPosts();
       if (res?.status === "success") {
-        setNews(res?.news);
+        setNews(res?.news.reverse()); // Reverse the news array to show latest first
       }
     } catch (error) {
       console.log(error);
@@ -53,7 +53,7 @@ const GridView = () => {
         </div>
       ) : (
         <div className="grid-view">
-          {news.slice(5, 9).map((movie) => (
+          {news.slice(5, 11).map((movie) => (
             <article key={movie?._id} className="movie-card">
               <Link
                 to={`/${movie?.category}/${movie?._id}`}

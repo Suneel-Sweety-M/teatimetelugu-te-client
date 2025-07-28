@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   addNewsComment,
@@ -647,6 +647,15 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
             <p className="cp" onClick={() => setIsUserJoin(!isUserJoin)}>
               Signin as {isUserJoin ? "Writer/Admin" : "user"}
             </p>{" "}
+            {!isUserJoin && (
+              <Link
+                to={"/forgot-password"}
+                className="cp"
+                onClick={() => setJoinPopup(false)}
+              >
+                <p>Forgot password?</p>
+              </Link>
+            )}
           </div>
         </div>
       )}

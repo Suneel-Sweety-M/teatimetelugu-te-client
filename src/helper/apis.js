@@ -862,6 +862,23 @@ export const getAllVideos = async () => {
   }
 };
 
+export const getQueryVideos = async (category, time, searchText) => {
+  try {
+    const url =
+    category || time || searchText
+      ? `/videos/query?searchText=${searchText}&category=${category}&postedTime=${time}`
+      : "/videos/query";
+    const res = await apiRequest({
+      url: url,
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /*=== Home Page === */
 
 export const getTopScrollPosts = async () => {

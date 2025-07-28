@@ -424,7 +424,8 @@ const Navbar = () => {
                   to="/"
                   className={`mobile-navbar-link ${
                     isActive("/") ? "active-tab" : ""
-                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>హోమ్</span>
                 </Link>
@@ -432,7 +433,8 @@ const Navbar = () => {
                   to="/politics"
                   className={`mobile-navbar-link ${
                     isActive("/politics") ? "active-tab" : ""
-                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>రాజకీయ</span>
                 </Link>
@@ -440,7 +442,8 @@ const Navbar = () => {
                   to="/movies"
                   className={`mobile-navbar-link ${
                     isActive("/movies") ? "active-tab" : ""
-                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>సినిమా</span>
                 </Link>
@@ -448,7 +451,8 @@ const Navbar = () => {
                   to="/gossips"
                   className={`mobile-navbar-link ${
                     isActive("/gossips") ? "active-tab" : ""
-                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>గాసిప్స్</span>
                 </Link>
@@ -456,7 +460,8 @@ const Navbar = () => {
                   to="/reviews"
                   className={`mobile-navbar-link ${
                     isActive("/reviews") ? "active-tab" : ""
-                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>రివ్యూస్</span>
                 </Link>
@@ -464,7 +469,8 @@ const Navbar = () => {
                   to="/gallery"
                   className={`mobile-navbar-link ${
                     isActive("/gallery") ? "active-tab" : ""
-                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>గ్యాలరీ</span>
                 </Link>
@@ -472,7 +478,8 @@ const Navbar = () => {
                   to="/videos"
                   className={`mobile-navbar-link ${
                     isActive("/videos") ? "active-tab" : ""
-                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>వీడియోలు</span>
                 </Link>
@@ -480,7 +487,8 @@ const Navbar = () => {
                   to="/ott"
                   className={`mobile-navbar-link ${
                     isActive("/ott") ? "active-tab" : ""
-                  }`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>ఓటిటి</span>
                 </Link>
@@ -605,6 +613,15 @@ const Navbar = () => {
             <p className="cp" onClick={() => setIsUserJoin(!isUserJoin)}>
               Signin as {isUserJoin ? "Writer/Admin" : "user"}
             </p>{" "}
+            {!isUserJoin && (
+              <Link
+                to={"/forgot-password"}
+                className="cp"
+                onClick={() => setIsJoin(false)}
+              >
+                <p>Forgot password?</p>
+              </Link>
+            )}
           </div>
         </div>
       )}

@@ -79,12 +79,13 @@ const Home = () => {
       }, 10000);
       return () => clearTimeout(timeoutId);
     }
-    document.title =
-      "టీ టైం తెలుగు - Telugu News on AP and TS Politics, Movies and Gossips";
     handleGetMoviePoster();
     handleGetHomeLongAd();
     handleGetHomeShortAd();
   }, []);
+
+  document.title =
+    "టీ టైం తెలుగు - Telugu News on AP and TS Politics, Movies and Gossips";
   return (
     <>
       <Navbar />
