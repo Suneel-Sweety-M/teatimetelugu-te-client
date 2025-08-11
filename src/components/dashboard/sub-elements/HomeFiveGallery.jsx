@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const HomeFiveGallery = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.te_teatimetelugu);
   const navigate = useNavigate();
 
   const [popupNews, setPopupNews] = useState(false);
@@ -87,7 +87,7 @@ const HomeFiveGallery = () => {
       const res = await getHomeGridPosts();
       if (res?.status === "success") {
         setGridNews(res?.news);
-        const ids = res?.news.map((newsItem, index) => ({
+        const ids = res?.news.map((newsItem) => ({
           id: newsItem._id,
           position: newsItem.position,
         }));
@@ -122,6 +122,7 @@ const HomeFiveGallery = () => {
       if (res?.status === "success") {
         toast.success(res?.message);
         setPopupNews(false);
+        allGridPosts();
       } else {
         toast.error(res?.message);
       }
@@ -265,9 +266,7 @@ const HomeFiveGallery = () => {
                       <td>
                         <select
                           className="ml10"
-                          disabled={
-                            !selected.some((s) => s.id === item._id)
-                          }
+                          disabled={!selected.some((s) => s.id === item._id)}
                           value={
                             selected.find((s) => s.id === item._id)?.position ||
                             ""

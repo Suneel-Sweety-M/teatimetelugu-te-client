@@ -8,7 +8,7 @@ import { login } from "../../redux/userSlice";
 import { toast } from "react-toastify";
 
 const Navbar = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.te_teatimetelugu);
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [seePassword, setSeePassword] = useState(false);
@@ -204,12 +204,20 @@ const Navbar = () => {
                   హోమ్
                 </Link>
                 <Link
+                  to="/news"
+                  className={`cp nav-tab ${
+                    isActive("/news") ? "active-tab" : ""
+                  }`}
+                >
+                  జనరల్ 
+                </Link>
+                <Link
                   to="/politics"
                   className={`cp nav-tab ${
                     isActive("/politics") ? "active-tab" : ""
                   }`}
                 >
-                  రాజకీయ
+                  రాజకీయం 
                 </Link>
                 <Link
                   to="/movies"
@@ -256,6 +264,14 @@ const Navbar = () => {
                   }`}
                 >
                   ఓటిటి
+                </Link>
+                <Link
+                  to="/sports"
+                  className={`cp nav-tab ${
+                    isActive("/sports") ? "active-tab" : ""
+                  }`}
+                >
+                  క్రీడలు 
                 </Link>
               </div>
             </div>
@@ -430,13 +446,22 @@ const Navbar = () => {
                   <span>హోమ్</span>
                 </Link>
                 <Link
+                  to="/news"
+                  className={`mobile-navbar-link ${
+                    isActive("/news") ? "active-tab" : ""
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                  <span>జనరల్</span>
+                </Link>
+                <Link
                   to="/politics"
                   className={`mobile-navbar-link ${
                     isActive("/politics") ? "active-tab" : ""
                   }`}
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
-                  <span>రాజకీయ</span>
+                  <span>రాజకీయం</span>
                 </Link>
                 <Link
                   to="/movies"
@@ -491,6 +516,15 @@ const Navbar = () => {
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 >
                   <span>ఓటిటి</span>
+                </Link>
+                <Link
+                  to="/sports"
+                  className={`mobile-navbar-link ${
+                    isActive("/sports") ? "active-tab" : ""
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                >
+                  <span>క్రీడలు</span>
                 </Link>
 
                 <div className="mobile-navbar-divider"></div>

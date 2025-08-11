@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import HomeFiveGallery from "./sub-elements/HomeFiveGallery";
 import DasTopNine from "./sub-elements/DasTopNine";
 import DasTrends from "./sub-elements/DasTrends";
+import DasHotTopics from "./sub-elements/DasHotTopics";
 import { getDashData } from "../../helper/apis";
 
 const DasHome = () => {
@@ -49,6 +50,7 @@ const DasHome = () => {
       <HomeFiveGallery />
       <DasTopNine />
       <DasTrends />
+      <DasHotTopics />
     </div>
   );
 };

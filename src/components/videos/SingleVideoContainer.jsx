@@ -70,6 +70,23 @@ const SingleVideoContainer = () => {
             <span style={{ color: "red", marginRight: "10px" }}>Video:</span>
             {videoData?.video?.title}
           </h1>
+          <span className="single-news-duo-left-top-auth-details">
+            <span className="sn-author">
+              Writer: <b>{videoData?.video?.postedBy?.fullName}</b>
+            </span>
+            <span className="sn-posted-date">
+              <i className="fa fa-calendar mr5"></i>
+              {moment(videoData?.video?.createdAt).format("hh:mm A, D MMMM YYYY")}
+            </span>
+            {/* <span className="sn-posted-date">
+              <i className="fa-regular fa-face-smile mr5"></i>
+              {videoData?.video?.reactions?.length} <span>Reactions</span>
+            </span>
+            <span className="sn-posted-date">
+              <i className="fa-regular fa-comments mr5"></i>
+              {commentsCount} <span>Comments</span>
+            </span> */}
+          </span>
           <div className="single-video-container-top">
             <div className="svct-video-container">
               {videoData?.video && (
@@ -233,15 +250,15 @@ const SingleVideoContainer = () => {
               </div>
               <LatestStories />
               <a href={newsShortAdLink} target="blank">
-              <img
-                src={
-                  newsShortAdImg ||
-                  "https://res.cloudinary.com/demmiusik/image/upload/v1741353625/Ad2_jpiggx.png"
-                }
-                alt="ad"
-                className="ad-img br5 cp"
-              />
-            </a>
+                <img
+                  src={
+                    newsShortAdImg ||
+                    "https://res.cloudinary.com/demmiusik/image/upload/v1741353625/Ad2_jpiggx.png"
+                  }
+                  alt="ad"
+                  className="ad-img br5 cp"
+                />
+              </a>
             </div>
           </div>
         </div>

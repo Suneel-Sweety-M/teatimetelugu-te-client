@@ -242,6 +242,8 @@ const DasAdsPosters = () => {
     });
     if (res?.status === "success") {
       toast.success(res?.message);
+      setNewsShortAdImg(res?.newsShortAd?.img);
+      setNewsShortAdLink(res?.newsShortAd?.link);
     } else {
       toast.success(res?.message);
     }
@@ -620,7 +622,7 @@ const DasAdsPosters = () => {
                       id=""
                       className="br5"
                       value={newsShortAdLink}
-                      onChange={(e) => setNewsLongAdLink(e.target.value)}
+                      onChange={(e) => setNewsShortAdLink(e.target.value)}
                     />
                   </div>
                   <div className="das-mt20">

@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
+  addGalleryReaction,
   addNewsComment,
   addNewsReaction,
   addNewsReplyComment,
@@ -12,20 +13,19 @@ import {
   likeNewsComment,
   loginUser,
 } from "../../helper/apis";
-import { login } from "../../redux/userSlice";
+import { login, addReaction, setReduxReactions } from "../../redux/userSlice";
 import moment from "moment";
 
-const NewsComments = ({ news, getNews, setCommentsCount }) => {
-  // const [showReplyBox, setShowReplyBox] = useState(false);
+const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
   const { id } = useParams();
-  const { user } = useSelector((state) => state.user);
-  const [allComments, setAllComments] = useState([]);
+  const { user } = useSelector((state) => state.te_teatimetelugu);
+  const reactionsArray = useSelector(
+    (state) => state.te_teatimetelugu.reactions
+  );
   const [directComments, setdirectComments] = useState([]);
   const [comment, setComment] = useState("");
   const [deleteCommentId, setdeleteCommentId] = useState("");
   const [replyInputs, setReplyInputs] = useState({});
-  // const [commentsLoadCount, setcommentsLoadCount] = useState(3);
-  // const [replyCommentsLoadCount, setreplyCommentsLoadCount] = useState(3);
   const [seePassword, setSeePassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [joinPopup, setJoinPopup] = useState(false);
@@ -81,7 +81,7 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
         toast.error(res?.message);
       } else {
         const comments = res?.comments;
-        setAllComments(comments);
+        // setAllComments(comments);
         setCommentsCount(comments?.length);
 
         const directCommentsList = comments.filter(
@@ -105,48 +105,6 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
     }));
   };
 
-  const initializeReactions = useCallback(() => {
-    const reactionTypes = [
-      "Happy",
-      "Normal",
-      "Amused",
-      "Funny",
-      "Angry",
-      "Sad",
-    ];
-    const initialReactions = reactionTypes.reduce((acc, type) => {
-      acc[type] = { count: 0, percentage: 0 };
-      return acc;
-    }, {});
-
-    news?.reactions?.forEach((reaction) => {
-      if (initialReactions[reaction.type]) {
-        initialReactions[reaction.type].count += 1;
-      }
-    });
-
-    const totalReactions = Object.values(initialReactions).reduce(
-      (acc, reaction) => acc + reaction.count,
-      0
-    );
-
-    if (totalReactions > 0) {
-      reactionTypes.forEach((type) => {
-        initialReactions[type].percentage = Math.round(
-          (initialReactions[type].count / totalReactions) * 100
-        );
-      });
-    }
-
-    return initialReactions;
-  }, [news]);
-
-  const [reactions, setReactions] = useState(initializeReactions);
-
-  useEffect(() => {
-    setReactions(initializeReactions());
-  }, [initializeReactions]);
-
   const handleAddReaction = async (type) => {
     try {
       if (!user) {
@@ -155,7 +113,26 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
       }
       const res = await addNewsReaction(id, { userId: user?._id, type });
       if (res?.status === "success") {
-        await getNews();
+        // await getNews();
+        dispatch(addReaction({ userId: user._id, type, _id: res.reactionId }));
+      } else {
+        toast.error(res?.message);
+      }
+    } catch (error) {
+      console.error("Error adding reaction:", error);
+    }
+  };
+
+  const handleAddGalleryReaction = async (type) => {
+    try {
+      if (!user) {
+        setJoinPopup(true);
+        return;
+      }
+      const res = await addGalleryReaction(id, { userId: user?._id, type });
+      if (res?.status === "success") {
+        // await getNews();
+        dispatch(addReaction({ userId: user._id, type, _id: res.reactionId }));
       } else {
         toast.error(res?.message);
       }
@@ -199,13 +176,26 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
         },
       ].map((reaction) => ({
         ...reaction,
-        count: reactions[reaction.type].count,
-        percentage: reactions[reaction.type].percentage,
-        reacted: news?.reactions?.some(
+        //   count: reactions[reaction.type].count,
+        //   percentage: reactions[reaction.type].percentage,
+        //   reacted: news?.reactions?.some(
+        //     (r) => r.userId === user?._id && r.type === reaction.type
+        //   ),
+        // })),
+        count: reactionsArray.filter((r) => r.type === reaction.type).length,
+        percentage:
+          reactionsArray.length > 0
+            ? Math.round(
+                (reactionsArray.filter((r) => r.type === reaction.type).length /
+                  reactionsArray.length) *
+                  100
+              )
+            : 0,
+        reacted: reactionsArray.some(
           (r) => r.userId === user?._id && r.type === reaction.type
         ),
       })),
-    [reactions, news?.reactions, user?._id]
+    [reactionsArray, user?._id]
   );
 
   const handleAddComment = async () => {
@@ -246,10 +236,10 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
   const handleDeleteComment = async (commentId) => {
     try {
       const res = await deleteNewsComment(commentId);
-      if (res?.status !== "success") {
-        toast.error(res?.message);
-      } else {
+      if (res?.status === "success") {
         fetchComments();
+      } else {
+        toast.error(res?.message);
       }
     } catch (error) {
       console.log(error);
@@ -257,16 +247,16 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
   };
 
   const handleLikeComment = async (commentId) => {
+    if (!user) {
+      setJoinPopup(true);
+      return;
+    }
     try {
-      if (!user) {
-        setJoinPopup(true);
-        return;
-      }
       const res = await likeNewsComment(commentId);
-      if (res?.status !== "success") {
-        toast.error(res?.message);
-      } else {
+      if (res?.status === "success") {
         fetchComments();
+      } else {
+        toast.error(res?.message);
       }
     } catch (error) {
       console.log(error);
@@ -274,16 +264,16 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
   };
 
   const handleDislikeComment = async (commentId) => {
+    if (!user) {
+      setJoinPopup(true);
+      return;
+    }
     try {
-      if (!user) {
-        setJoinPopup(true);
-        return;
-      }
       const res = await dislikeNewsComment(commentId);
-      if (res?.status !== "success") {
-        toast.error(res?.message);
-      } else {
+      if (res?.status === "success") {
         fetchComments();
+      } else {
+        toast.error(res?.message);
       }
     } catch (error) {
       console.log(error);
@@ -293,19 +283,32 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
   useEffect(() => {
     fetchComments();
   }, [fetchComments]);
+
+  useEffect(() => {
+    if (news?.reactions) {
+      dispatch(setReduxReactions(news.reactions));
+    }
+  }, [dispatch, news?.reactions]);
+
   return (
     <>
       <div className="news-comments-container">
         <div className="news-reactions-section">
           <div className="news-reactions-title">
             <h3>What is your reaction?</h3>
-            <span>{news?.reactions?.length} votes</span>
+            <span>{reactionsArray?.length} votes</span>
           </div>
           <div className="all-reactions">
             {reactionsList.map((reaction) => (
               <div
                 className="reaction-box"
-                onClick={() => handleAddReaction(reaction.type)}
+                onClick={() => {
+                  if (news?.galleryPics) {
+                    handleAddGalleryReaction(reaction.type);
+                  } else {
+                    handleAddReaction(reaction.type);
+                  }
+                }}
                 key={reaction.type}
               >
                 <div className="reaction-emoji">
@@ -334,7 +337,7 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
 
         <div className="comments-section">
           <div className="comments-header">
-            <h3>Comments ({allComments.length})</h3>
+            <h3>Comments ({commentsCount})</h3>
             <button className="notification-btn">
               <i className="fas fa-bell"></i>
             </button>
@@ -361,8 +364,8 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
           </div>
 
           <div className="comments-list">
-            {directComments.map((comment) => (
-              <div className="comment">
+            {directComments.map((comment, index) => (
+              <div className="comment" key={index}>
                 <div className="comment-avatar">
                   <img
                     src={
@@ -582,6 +585,27 @@ const NewsComments = ({ news, getNews, setCommentsCount }) => {
               </div>
             ))}
           </div>
+          {/* {hasMoreComments && (
+            <button
+              className={`load-more-btn ${isLoading ? "loading" : ""}`}
+              onClick={() => fetchComments()}
+              disabled={isLoading}
+            >
+              {isLoading ? (
+                <>
+                  <span className="btn-text">లోడ్ అవుతోంది...</span>
+                  <span className="btn-icon spinner"></span>
+                </>
+              ) : (
+                <>
+                  <span className="btn-text">ఇంకా లోడ్ చేయండి</span>
+                  <span className="btn-icon">
+                    <i className="fa-solid fa-arrow-rotate-right"></i>
+                  </span>
+                </>
+              )}
+            </button>
+          )} */}
         </div>
       </div>
 

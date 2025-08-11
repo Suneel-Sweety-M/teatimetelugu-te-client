@@ -3,7 +3,7 @@ import "../components/gallery/gallery.css";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { getGalleryPosts } from "../helper/apis";
+import { loadGalleryPosts } from "../helper/apis";
 import { toast } from "react-toastify";
 
 const POSTS_PER_PAGE = 12;
@@ -23,7 +23,7 @@ const Gallery = () => {
     document.title = "టీ టైం తెలుగు - గ్యాలరీ";
     setIsLoading(true);
     try {
-      const res = await getGalleryPosts(currentPage, POSTS_PER_PAGE);
+      const res = await loadGalleryPosts(currentPage, POSTS_PER_PAGE);
       if (res?.status === "success") {
         setGallery(res?.gallery || []);
         setTotalPages(Math.ceil((res?.total || 0) / POSTS_PER_PAGE));

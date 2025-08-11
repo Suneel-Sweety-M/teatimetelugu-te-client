@@ -74,12 +74,12 @@ const MovieCollections = () => {
                 className="ms-text"
               >
                 Name
-              </span>
+              </span> 
               <span
                 style={{ color: "red", fontWeight: "500" }}
                 className="ms-text"
               >
-                Release Date
+                Collections
               </span>
             </div>
 

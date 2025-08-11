@@ -78,7 +78,9 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
+  /* position: sticky; */
+  /* top: 0; */
+  /* z-index: 1000; */
   overflow: hidden;
 }
 
@@ -186,7 +188,7 @@
   transform: scale(1.1);
 }
 
-/* Menu */
+/*====== Menu ======*/
 .mobile-navbar-menu {
   position: fixed;
   top: 0;
@@ -246,7 +248,7 @@
   margin: 15px 0;
 }
 
-/* Search */
+/*======== Search ========*/
 .mobile-navbar-search {
   display: flex;
   padding: 15px 25px;

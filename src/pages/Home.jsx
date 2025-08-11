@@ -7,7 +7,6 @@ import TopNine from "../components/home/TopNine";
 import Trends from "../components/home/Trends";
 import MovieSchedules from "../components/home/MovieSchedules";
 import MovieCollections from "../components/home/MovieCollections";
-import GridView from "../components/home/GridView";
 import HomeGallery from "../components/home/HomeGallery";
 import Trailers from "../components/trailers/Trailers";
 import MostViewed from "../components/home/MostViewed";
@@ -19,6 +18,7 @@ import Discover from "../components/home/Discover";
 import PopupPoster from "../components/home/PopupPoster";
 import { toast } from "react-toastify";
 import { getHomeLongAd, getHomeShortAd, getMoviePoster } from "../helper/apis";
+import ScrollNews from "../components/home/ScrollNews";
 
 const Home = () => {
   const [poster, setPoster] = useState(false);
@@ -95,7 +95,7 @@ const Home = () => {
         <div className="duo-content">
           <div className="duo-content-left">
             <Trends />
-            <GridView />
+            <ScrollNews />
           </div>
           <div className="duo-content-right">
             {moviePosterImg && (

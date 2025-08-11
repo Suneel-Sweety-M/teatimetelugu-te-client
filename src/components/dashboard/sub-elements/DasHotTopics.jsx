@@ -1,15 +1,11 @@
-import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import {
-  addTopNinePosts,
-  getNewsPosts,
-  getTopNinePosts,
-} from "../../../helper/apis";
-import { useSelector } from "react-redux";
+import { addHotTopics, getHotTopics, getNewsPosts } from "../../../helper/apis";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import moment from "moment";
 
-const DasTopNine = () => {
+const DasHotTopics = () => {
   const { user } = useSelector((state) => state.te_teatimetelugu);
   const navigate = useNavigate();
 
@@ -17,8 +13,8 @@ const DasTopNine = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [news, setNews] = useState([]);
-  const [topNineNews, setTopNineNews] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [trendsNews, setTrendsNews] = useState([]);
+  const [selected, setSelected] = useState([]); // [{ news, position }]
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -47,10 +43,11 @@ const DasTopNine = () => {
 
   const handleCheckboxChange = (id) => {
     const exists = selected.find((s) => s.id === id);
+
     if (exists) {
       setSelected((prev) => prev.filter((s) => s.id !== id));
     } else {
-      if (selected.length === 9) {
+      if (selected.length === 5) {
         toast.info("You have reached max limit.");
         return;
       }
@@ -60,7 +57,7 @@ const DasTopNine = () => {
 
   const handlePositionChange = (id, position) => {
     if (selected.some((s) => s.position === position)) {
-      toast.error("Position already selected!");
+      toast.error("Position already selected for another post.");
       return;
     }
 
@@ -80,17 +77,17 @@ const DasTopNine = () => {
     }
   };
 
-  const allTopNinePosts = async () => {
+  const allHotTopics = async () => {
     setIsLoading(true);
     try {
-      const res = await getTopNinePosts();
+      const res = await getHotTopics();
       if (res?.status === "success") {
-        setTopNineNews(res?.news);
-        const formatted = res.news.map((item) => ({
-          id: item._id,
-          position: item.position,
+        setTrendsNews(res?.news);
+        const ids = res?.news.map((newsItem) => ({
+          id: newsItem._id,
+          position: newsItem.position,
         }));
-        setSelected(formatted);
+        setSelected(ids);
       }
     } catch (error) {
       console.log(error);
@@ -99,33 +96,31 @@ const DasTopNine = () => {
   };
 
   const handleSave = async () => {
-    if (selected.length !== 9) {
-      toast.info("Select exactly 9 posts.");
+    if (selected?.length < 5) {
+      toast.info("Select 5 posts");
       return;
     }
-
-    const incomplete = selected.some((s) => !s.position);
-    if (incomplete) {
-      toast.error("Assign all positions (1–9).");
-      return;
-    }
-
-    const items = selected.map((s) => ({ news: s.id, position: s.position }));
-
     setIsUploading(true);
+
+    const items = selected.map((item) => ({
+      news: item.id, // change key to match backend schema
+      position: item.position,
+    }));
+
     try {
-      const res = await addTopNinePosts({ items });
+      const res = await addHotTopics({ items });
       if (res?.status === "success") {
         toast.success(res?.message);
-        allTopNinePosts();
         setPopupNews(false);
+        allHotTopics();
       } else {
         toast.error(res?.message);
       }
+      setIsUploading(false);
     } catch (error) {
       console.log(error);
+      setIsUploading(false);
     }
-    setIsUploading(false);
   };
 
   const handleLink = (id) => {
@@ -133,11 +128,11 @@ const DasTopNine = () => {
   };
 
   const handleView = (news) => {
-    navigate(`/${news?.category}/${news?.newsId}`);
+    navigate(`/${news?.category}/${news?._id}`);
   };
 
   useEffect(() => {
-    allTopNinePosts();
+    allHotTopics();
     allNews();
   }, []);
   return (
@@ -147,7 +142,7 @@ const DasTopNine = () => {
           className="fa fa-pen-to-square das-float-right cp"
           onClick={() => setPopupNews(true)}
         ></i>
-        <div className="das-news-container-title">Top 9</div>
+        <div className="das-news-container-title">Hot Topics</div>
 
         {!isLoading ? (
           <table className="das-all-news-section">
@@ -162,9 +157,9 @@ const DasTopNine = () => {
                 <th className="table-action">Action</th>
               </tr>
             </thead>
-            {topNineNews?.length > 0 ? (
+            {trendsNews?.length > 0 ? (
               <tbody>
-                {topNineNews?.map((item, index) => (
+                {trendsNews?.map((item, index) => (
                   <tr key={index}>
                     <td className="table-sn">{index + 1}</td>
                     <td className="table-title">{item?.title}</td>
@@ -212,7 +207,9 @@ const DasTopNine = () => {
           <div className="br5 popup-img p10">
             <div className="das-news-container">
               <div className="popup-news-top das-d-flex das-jcsb">
-                <div className="das-news-container-title">Select Top 9</div>
+                <div className="das-news-container-title">
+                  Select Hot Topics
+                </div>
                 <span className="popup-news-top-x das-mx20">
                   <i
                     className="fa fa-xmark"
@@ -221,70 +218,83 @@ const DasTopNine = () => {
                 </span>
               </div>
 
-              <table className="das-all-news-section">
-                <thead>
-                  <tr>
-                    <th className="table-checkbox"></th>
-                    <th className="table-sn">S.No.</th>
-                    <th className="table-title">Title</th>
-                    <th className="table-image">Image</th>
-                    <th className="table-category">Category</th>
-                    <th className="table-date">Date</th>
-                    <th className="table-status">Writer</th>
-                    <th>Position</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentNews?.map((item, index) => (
-                    <tr key={index}>
-                      <td className="table-checkbox">
-                        <input
-                          type="checkbox"
-                          checked={selected.some((s) => s.id === item._id)}
-                          onChange={() => handleCheckboxChange(item._id)}
-                        />{" "}
-                      </td>
-                      <td className="table-sn">
-                        {indexOfFirstItem + index + 1}
-                      </td>
-                      <td className="table-title">{item?.title}</td>
-                      <td className="table-image">
-                        <img src={item?.mainUrl} alt="pic" />
-                      </td>
-                      <td className="table-category">{item?.category}</td>
-                      <td className="table-date">
-                        {moment(item?.createdAt).format("h:mm a, D MMMM YYYY")}
-                      </td>
-                      <td className="table-status">
-                        <span>{item?.postedBy?.fullName}</span>
-                      </td>
-                      <td>
-                        <select
-                          className="ml10"
-                          disabled={!selected.some((s) => s.id === item._id)}
-                          value={
-                            selected.find((s) => s.id === item._id)?.position ||
-                            ""
-                          }
-                          onChange={(e) =>
-                            handlePositionChange(
-                              item._id,
-                              parseInt(e.target.value)
-                            )
-                          }
-                        >
-                          <option value="">Pos</option>
-                          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((pos) => (
-                            <option key={pos} value={pos}>
-                              {pos}
-                            </option>
-                          ))}
-                        </select>
-                      </td>
+              {!isLoading ? (
+                <table className="das-all-news-section">
+                  <thead>
+                    <tr>
+                      <th className="table-checkbox"></th>
+                      <th className="table-sn">S.No.</th>
+                      <th className="table-title">Title</th>
+                      <th className="table-image">Image</th>
+                      <th className="table-category">Category</th>
+                      <th className="table-date">Date</th>
+                      <th className="table-status">Writer</th>
+                      <th>Position</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {currentNews?.map((item, index) => (
+                      <tr key={index}>
+                        <td className="table-checkbox">
+                          <input
+                            type="checkbox"
+                            checked={selected.some((s) => s.id === item?._id)}
+                            onChange={() => handleCheckboxChange(item?._id)}
+                          />
+                        </td>
+                        <td className="table-sn">
+                          {indexOfFirstItem + index + 1}
+                        </td>
+                        <td className="table-title">{item?.title}</td>
+                        <td className="table-image">
+                          <img src={item?.mainUrl} alt="pic" />
+                        </td>
+                        <td className="table-category">{item?.category}</td>
+                        <td className="table-date">
+                          {moment(item?.createdAt).format(
+                            "h:mm a, D MMMM YYYY"
+                          )}
+                        </td>
+                        <td className="table-status">
+                          <span>{item?.postedBy?.fullName}</span>
+                        </td>
+                        <td>
+                          <select
+                            className="ml10"
+                            disabled={!selected.some((s) => s.id === item._id)}
+                            value={
+                              selected.find((s) => s.id === item._id)
+                                ?.position || ""
+                            }
+                            onChange={(e) =>
+                              handlePositionChange(
+                                item._id,
+                                parseInt(e.target.value)
+                              )
+                            }
+                          >
+                            <option value="">Pos</option>
+                            {[1, 2, 3, 4, 5].map((pos) => (
+                              <option key={pos} value={pos}>
+                                {pos}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div>
+                  <div className="snlc-text"></div>
+                  <div className="snlc-text"></div>
+                  <div className="snlc-text"></div>
+                  <div className="snlc-text"></div>
+                  <div className="snlc-text"></div>
+                  <div className="snlc-text"></div>
+                </div>
+              )}
 
               <div className="das-all-news-bottom">
                 <div className="news-popup-btns das-mx10">
@@ -333,4 +343,4 @@ const DasTopNine = () => {
   );
 };
 
-export default DasTopNine;
+export default DasHotTopics;

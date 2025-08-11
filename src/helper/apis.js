@@ -221,7 +221,7 @@ export const addGalleryPosts = async (data) => {
 
 export const getGalleryPosts = async () => {
   try {
-    const res = await apiRequest({
+    const res = await apiRequest({ 
       url: "/gallery",
       method: "GET",
     });
@@ -317,7 +317,50 @@ export const getNewsPosts = async () => {
   } catch (error) {
     console.log(error);
   }
-};
+}; 
+
+export const getTrendingNews = async () => {
+  try {
+    const res = await apiRequest({
+      url: "/news/trending",
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}; 
+
+export const getHomeNewsPosts = async () => {
+  try {
+    const res = await apiRequest({
+      url: "/news/home",
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}; 
+
+export const getHomeVideos = async (subCategory, limit) => {
+  try {
+    const res = await apiRequest({
+      url: "/videos/home",
+      method: "GET",
+      params: { 
+        subCategory,
+        limit,
+      },
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}; 
 
 export const getFilteredNews = async (category, time, searchText, writer) => {
   const url =
@@ -460,7 +503,7 @@ export const getSingleNews = async (id) => {
   }
 };
 
-export const addFileForLink = async (data) => {
+export const addFileForLink = async (data) => { 
   try {
     const res = await apiRequest({
       url: "/dashboard/set-files-links",
@@ -580,6 +623,35 @@ export const getTrendsPosts = async () => {
     console.log(error);
   }
 };
+
+export const addHotTopics = async (data) => {
+  try {
+    const res = await apiRequest({
+      url: "/dashboard/set-hot-topics",
+      method: "POST",
+      data,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
+export const getHotTopics = async () => {
+  try {
+    const res = await apiRequest({
+      url: "/dashboard/get-hot-topics",
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 
 export const getMovieReleases = async () => {
   try {
@@ -703,6 +775,33 @@ export const addNewsReaction = async (id, data) => {
   }
 };
 
+export const addGalleryReaction = async (id, data) => {
+  try {
+    const res = await apiRequest({
+      url: `/comments/${id}/add-gallery-reaction`,
+      method: "POST",
+      data,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// export const getNewsComments = async (id, skip = 0, limit = 8) => {
+//   try {
+//     const res = await apiRequest({
+//       url: `/comments/${id}?skip=${skip}&limit=${limit}`,
+//       method: "GET",
+//     });
+
+//     return res;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// };
+
 export const getNewsComments = async (id) => {
   try {
     const res = await apiRequest({
@@ -715,6 +814,13 @@ export const getNewsComments = async (id) => {
     console.log(error);
   }
 };
+
+// export const getReplies = async (commentId, skip = 0, limit = 8) => {
+//   return await apiRequest({
+//     url: `/comments/replies/${commentId}?skip=${skip}&limit=${limit}`,
+//     method: "GET",
+//   });
+// };
 
 export const addNewsComment = async (id, data) => {
   try {

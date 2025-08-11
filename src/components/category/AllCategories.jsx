@@ -5,6 +5,42 @@ const AllCategories = () => {
 
   return (
     <>
+    {category === "news" && (
+        <div className="all-categories-container">
+          <Link to={"/news?subcategory=ap"} className="categorie-box">
+            <img
+              src="https://jswtv.tv/wp-content/uploads/2022/07/YS-Jagan-hits-it-out-against-Pawan-Kalyan-Chandrababu.jpg"
+              alt="category-img"
+            />
+            <h3 className="category-title-active category-title text-capital">ఆంధ్రప్రదేశ్</h3>
+          </Link>
+          <Link to={"/news?subcategory=ts"} className="categorie-box">
+            <img
+              src="https://cdn.siasat.com/wp-content/uploads/2023/12/Untitled-design-2023-12-16T214309.488.jpg"
+              alt="category-img"
+            />
+            <h3 className="category-title text-capital">తెలంగాణ</h3>
+          </Link>
+          <Link to={"/news?subcategory=national"} className="categorie-box">
+            <img
+              src="https://c.ndtvimg.com/gws/ms/10-politicians-who-will-drive-the-narrative-in-2024-elections/assets/1.jpeg?1711777573"
+              alt="category-img"
+            />
+            <h3 className="category-title text-capital">జాతీయ</h3>
+          </Link>
+          <Link
+            to={"/news?subcategory=international"}
+            className="categorie-box"
+          >
+            <img
+              src="https://i.ndtvimg.com/i/2018-04/pm-modi-xi-jinping-pti_650x400_71524879810.jpg"
+              alt="category-img"
+            />
+            <h3 className="category-title text-capital">అంతర్జాతీయ</h3>
+          </Link>
+        </div>
+      )}
+
       {category === "politics" && (
         <div className="all-categories-container">
           <Link to={"/politics?subcategory=ap"} className="categorie-box">
@@ -71,7 +107,7 @@ const AllCategories = () => {
             />
             <h3 className="category-title text-capital">సౌత్</h3>
           </Link>
-          <Link to={"/movies?subcategory=north"} className="categorie-box">
+          {/* <Link to={"/movies?subcategory=north"} className="categorie-box">
             <img
               src="https://sm.mashable.com/t/mashable_in/photo/default/ranbir-hrithik_uc6u.1248.jpg"
               alt="category-img"
@@ -94,7 +130,7 @@ const AllCategories = () => {
               alt="category-img"
             />
             <h3 className="category-title text-capital">ట్రైలర్లు</h3>
-          </Link>
+          </Link> */}
         </div>
       )}
 

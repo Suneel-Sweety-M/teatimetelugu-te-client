@@ -10,7 +10,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const DasAllNews = () => {
-  const { user } = useSelector((state) => state.user); 
+  const { user } = useSelector((state) => state.te_teatimetelugu);
   const navigate = useNavigate();
 
   const [news, setNews] = useState([]);
@@ -25,8 +25,6 @@ const DasAllNews = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   console.log(allUsers);
-  
-
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -145,6 +143,7 @@ const DasAllNews = () => {
                 <option value="collections">Collections</option>
                 <option value="reviews">Reviews</option>
                 <option value="ott">OTT</option>
+                <option value="sports">Sports</option>
               </select>
               <div className="nfc-search">
                 <input

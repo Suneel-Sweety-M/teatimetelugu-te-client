@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import SectionTitle from "../titles/SectionTitle";
 import { Link } from "react-router-dom";
-import { getNewsPosts } from "../../helper/apis";
+import { getHomeNewsPosts } from "../../helper/apis";
 
 const LatestCollection = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
   const [news, setNews] = useState([]);
 
   useEffect(() => {
     const allNews = async () => {
       setIsLoading(true);
       try {
-        const res = await getNewsPosts();
+        const res = await getHomeNewsPosts();
         if (res?.status === "success") {
           setNews(res?.news);
         }
@@ -51,7 +51,7 @@ const LatestCollection = () => {
         </div>
       ) : (
         <div className="latest-collection-grid">
-          {news?.slice(0, 9)?.map((collection) => (
+          {news?.map((collection) => (
             <Link
               to={`/${collection?.category}/${collection?._id}`}
               key={collection?._id}

@@ -35,6 +35,7 @@ import { login } from "./redux/userSlice";
 import Search from "./pages/Search";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import ScrollTop from "./components/scroll-top/ScrollTop";
 
 function App() {
   const dispatch = useDispatch();
@@ -58,6 +59,7 @@ function App() {
   return (
     <>
       <ToastContainer />
+      <ScrollTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

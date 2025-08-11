@@ -140,6 +140,7 @@ const EditNews = () => {
                   <option value="collections">Collections</option>
                   <option value="gossips">Gossips</option>
                   <option value="reviews">Reviews</option>
+                  <option value="sports">Sports</option>
                 </select>
               </div>
               <div className="wns-box das-my20 das-py20">

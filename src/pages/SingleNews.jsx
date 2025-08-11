@@ -9,14 +9,19 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { getNewsShortAd, getSingleNews } from "../helper/apis";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 
 const SingleNews = () => {
   const { id } = useParams();
+  const reactionsArray = useSelector(
+    (state) => state.te_teatimetelugu.reactions
+  );
   const navigate = useNavigate();
   const [news, setNews] = useState({});
   const [suggestedNews, setSuggestedNews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   // const [postsCount, setpostsCount] = useState(8);
+  // const [reactionsCount, setReactionsCount] = useState(0);
   const [commentsCount, setCommentsCount] = useState(0);
 
   const getNews = useCallback(async () => {
@@ -91,15 +96,15 @@ const SingleNews = () => {
                 </h1>
                 <span className="single-news-duo-left-top-auth-details">
                   <span className="sn-author">
-                    By <b>{news?.postedBy?.fullName}</b>
+                    Writer: <b>{news?.postedBy?.fullName}</b>
                   </span>
                   <span className="sn-posted-date">
                     <i className="fa fa-calendar mr5"></i>
-                    {moment(news?.createdAt).format("D MMMM YYYY")}
+                    {moment(news?.createdAt).format("hh:mm A, D MMMM YYYY")}
                   </span>
                   <span className="sn-posted-date">
                     <i className="fa-regular fa-face-smile mr5"></i>
-                    {news?.reactions?.length} <span>Reactions</span>
+                    {reactionsArray?.length} <span>Reactions</span>
                   </span>
                   <span className="sn-posted-date">
                     <i className="fa-regular fa-comments mr5"></i>
@@ -116,10 +121,27 @@ const SingleNews = () => {
                     dangerouslySetInnerHTML={{ __html: news?.description }}
                   />
                 </div>
+                {news?.category === "reviews" && (
+                  <div className="single-news-rating-container">
+                    <h1>టీ టైం తెలుగు రేటింగ్ :</h1>
+                    {[...Array(5)].map((_, i) => (
+                      <i
+                        key={i}
+                        className={
+                          i < news?.movieRating
+                            ? "fa-solid fa-star"
+                            : "fa-regular fa-star"
+                        }
+                        style={{ color: "#FFD700", marginRight: "4px" }}
+                      ></i>
+                    ))}
+                  </div>
+                )}
               </div>
               <NewsComments
                 news={news}
-                getNews={getNews}
+                // getNews={getNews}
+                commentsCount={commentsCount}
                 setCommentsCount={setCommentsCount}
               />
             </div>

@@ -91,12 +91,12 @@ const AllVideos = () => {
     if (!cat.items.length) return null;
 
     return (
-      <div className="videos-category-container" key={key}>
+      <div className="videos-category-container">
         <SectionTitle title={teluguTitle} />
         <div className="all-category-posts-container">
-          {cat.items.map((video) => (
+          {cat.items.map((video, index) => (
             <Link
-              key={video._id}
+              key={index}
               to={`/videos/v/${video._id}`}
               className="single-category-post"
             >
@@ -119,13 +119,23 @@ const AllVideos = () => {
         </div>
         {cat.hasMore && (
           <button
-            className="load-more-btn"
+            className={`load-more-btn ${isLoading ? "loading" : ""}`}
             onClick={() => fetchVideosByCategory(key)}
+            disabled={isLoading}
           >
-            <span className="btn-text">ఇంకా లోడ్ చేయండి</span>
-            <span className="btn-icon">
-              <i className="fa-solid fa-arrow-rotate-right"></i>
-            </span>
+            {isLoading ? (
+              <>
+                <span className="btn-text">లోడ్ అవుతోంది...</span>
+                <span className="btn-icon spinner"></span>
+              </>
+            ) : (
+              <>
+                <span className="btn-text">ఇంకా లోడ్ చేయండి</span>
+                <span className="btn-icon">
+                  <i className="fa-solid fa-arrow-rotate-right"></i>
+                </span>
+              </>
+            )}
           </button>
         )}
       </div>
@@ -134,7 +144,8 @@ const AllVideos = () => {
 
   return (
     <div className="all-videos-container">
-      {isLoading && Object.values(categoryData).every((cat) => cat.items.length === 0) ? (
+      {isLoading &&
+      Object.values(categoryData).every((cat) => cat.items.length === 0) ? (
         // Initial loader
         <div className="all-category-posts-container">
           {[...Array(9)].map((_, index) => (

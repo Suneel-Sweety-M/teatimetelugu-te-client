@@ -7,9 +7,10 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const DasAddGallery = () => {
-  const { user } = useSelector((state) => state.user); 
+  const { user } = useSelector((state) => state.te_teatimetelugu); 
 
   const [title, setTitle] = useState("");
+  const [enTitle, setEnTitle] = useState("");
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -38,7 +39,7 @@ const DasAddGallery = () => {
   };
 
   const handlePost = async () => {
-    if (!title || title === "") {
+    if (!title || title === "" || !enTitle || enTitle === "") {
       toast.error("Please write something..!");
       return;
     }
@@ -46,6 +47,7 @@ const DasAddGallery = () => {
     setIsSaving(true);
     const formData = new FormData();
     formData.append("title", title);
+    formData.append("enTitle", enTitle);
     formData.append("name", name);
     formData.append("category", category);
     formData.append("description", description);
@@ -60,6 +62,7 @@ const DasAddGallery = () => {
       if (res?.status === "success") {
         toast.success(res?.message);
         setTitle("");
+        setEnTitle("");
         setName("");
         setCategory("");
         setDescription("");
@@ -94,20 +97,30 @@ const DasAddGallery = () => {
               <h3 className="">Add Name</h3>
               <input
                 type="text"
-                placeholder="eg. Elon Musk"
+                placeholder="eg. శ్రియ శరణ్"
                 className="br5"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
             <div className="wns-box das-my20 das-py20">
-              <h3 className="">Add Title</h3>
+              <h3 className="">Add Telugu Title</h3>
               <input
                 type="text"
-                placeholder="eg. Elon started..."
+                placeholder="eg. శ్రియ శరణ్ హాట్ ఫోటోలు"
                 className="br5"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+              />
+            </div>
+            <div className="wns-box das-my20 das-py20">
+              <h3 className="">Add English Title</h3>
+              <input
+                type="text"
+                placeholder="eg. Shriya Saran Hot Pics"
+                className="br5"
+                value={enTitle}
+                onChange={(e) => setEnTitle(e.target.value)}
               />
             </div>
             <div className="wns-box das-my20 das-py20">

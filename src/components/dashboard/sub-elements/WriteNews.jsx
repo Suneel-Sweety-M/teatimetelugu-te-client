@@ -6,6 +6,7 @@ import UploadFile from "./UploadFile";
 
 const WriteNews = () => {
   const [title, setTitle] = useState("");
+  const [enTitle, setEnTitle] = useState("");
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState("");
   const [movieRating, setMovieRating] = useState(0);
@@ -46,6 +47,7 @@ const WriteNews = () => {
       setIsSaving(true);
       const formData = new FormData();
       formData.append("title", title);
+      formData.append("enTitle", enTitle);
       formData.append("category", category);
       formData.append("subCategory", subCategory);
       formData.append("description", description);
@@ -60,6 +62,7 @@ const WriteNews = () => {
       if (res?.status === "success") {
         toast.success(res?.message);
         setTitle("");
+        setEnTitle("");
         setCategory("");
         setSubCategory("");
         setDescription("");
@@ -101,13 +104,23 @@ const WriteNews = () => {
           <div className="das-news-container-title">Write News</div>
           <div className="write-news-section">
             <div className="wns-box das-my20 das-py20">
-              <h3 className="">Add Title</h3>
+              <h3 className="">Add Telugu Title</h3>
               <input
                 type="text"
-                placeholder="Exiting News..."
+                placeholder="eg. చర్చలకు కూడా ఛాన్స్ ఇవ్వని ట్రంప్"
                 className="br5"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
+              />
+            </div> 
+            <div className="wns-box das-my20 das-py20">
+              <h3 className="">Add English Title</h3>
+              <input
+                type="text"
+                placeholder="eg. Trump doesn't even give a chance for negotiations"
+                className="br5"
+                value={enTitle}
+                onChange={(e) => setEnTitle(e.target.value)}
               />
             </div>
             {preview ? (
@@ -207,10 +220,10 @@ const WriteNews = () => {
                   <option value="politics">Politics</option>
                   <option value="movies">Movies</option>
                   <option value="ott">OTT</option>
-                  <option value="show">Show</option>
-                  <option value="collections">Collections</option>
+                  <option value="show">Shows</option>
                   <option value="gossips">Gossips</option>
                   <option value="reviews">Reviews</option>
+                  <option value="sports">Sports</option>
                 </select>
               </div>
               <div className="wns-box das-my20 das-py20">
@@ -258,7 +271,7 @@ const WriteNews = () => {
                   {category === "movies" && (
                     <option value="south">South Cinema</option>
                   )}
-                  {category === "movies" && (
+                  {/* {category === "movies" && (
                     <option value="north">North Cinema</option>
                   )}
                   {category === "movies" && (
@@ -266,7 +279,7 @@ const WriteNews = () => {
                   )}
                   {category === "movies" && (
                     <option value="collections">Collections</option>
-                  )}
+                  )} */}
 
                   {category === "ott" && <option value="review">Review</option>}
                   {category === "ott" && (

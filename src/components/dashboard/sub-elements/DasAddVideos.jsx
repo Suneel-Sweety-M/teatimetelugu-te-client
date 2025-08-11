@@ -4,6 +4,7 @@ import { addVideoPost } from "../../../helper/apis";
 
 const DasAddVideos = ({ setPopupBox }) => {
   const [title, setTitle] = useState("");
+  const [enTitle, setEnTitle] = useState("");
   const [ytId, setYtId] = useState("");
   const [subCategory, setSubCategory] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -11,11 +12,12 @@ const DasAddVideos = ({ setPopupBox }) => {
   const onSubmit = async () => {
     setIsSaving(true);
     try {
-      const res = await addVideoPost({ title, subCategory, ytId });
+      const res = await addVideoPost({ title, enTitle, subCategory, ytId });
       if (res?.status === "success") {
         toast.success(res?.message);
         setIsSaving(false);
         setTitle("");
+        setEnTitle("");
         setSubCategory("");
         setYtId("");
       } else {
@@ -38,13 +40,23 @@ const DasAddVideos = ({ setPopupBox }) => {
             </span>
           </div>
           <div className="wns-box das-my20 das-py20">
-            <h3 className="text-start">Add Title</h3>
+            <h3 className="text-start">Add Telugu Title</h3>
             <input
               type="text"
-              placeholder="Title Here..."
+              placeholder="Telugu Title Here..."
               className="br5"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+            />
+          </div>
+          <div className="wns-box das-my20 das-py20">
+            <h3 className="text-start">Add English Title</h3>
+            <input
+              type="text"
+              placeholder="English Title Here..."
+              className="br5"
+              value={enTitle}
+              onChange={(e) => setEnTitle(e.target.value)}
             />
           </div>
           <div className="wns-box das-my20 das-py20">
@@ -71,7 +83,7 @@ const DasAddVideos = ({ setPopupBox }) => {
                 </select>
               </div> */}
           <div className="wns-box das-my20 das-py20">
-            <h3 className="text-start">Sub Category</h3>
+            <h3 className="text-start">Set Category</h3>
             <select
               name=""
               id=""

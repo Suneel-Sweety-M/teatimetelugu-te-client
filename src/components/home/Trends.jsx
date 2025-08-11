@@ -12,7 +12,7 @@ const Trends = () => {
     try {
       const res = await getTrendsPosts();
       if (res?.status === "success") {
-        setTrendsNews(res?.news?.reverse());
+        setTrendsNews(res?.news);
       }
     } catch (error) {
       console.log(error);
@@ -97,7 +97,7 @@ const Trends = () => {
             </Link>
           </div>
           <div className="trends-right">
-            {otherTrends.slice(0, 4).map((item, index) => (
+            {otherTrends.map((item, index) => (
               <Link
                 to={`/${item?.category}/${item?._id}`}
                 className="trends-post cp"

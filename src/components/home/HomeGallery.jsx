@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import SectionTitle from "../titles/SectionTitle";
 import { Link } from "react-router-dom";
-import { getGalleryPosts } from "../../helper/apis";
+import { loadGalleryPosts } from "../../helper/apis";
 
 const HomeGallery = () => {
-  const [homeGalleryNews, setHomeGalleryNews] = useState([]);
+  const [homeGalleryNews, setHomeGalleryNews] = useState([]); 
   const [loading, setLoading] = useState(true);
 
   const allHomeGalleryPosts = async () => {
     try {
-      const res = await getGalleryPosts();
+      const res = await loadGalleryPosts(1, 5);
       if (res?.status === "success") {
         setHomeGalleryNews(res?.gallery);
       }

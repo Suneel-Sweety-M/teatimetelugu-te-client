@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import SectionTitle from "../titles/SectionTitle";
 import { Link } from "react-router-dom";
-import { getNewsPosts } from "../../helper/apis";
+import { getTrendingNews } from "../../helper/apis";
 
 const LatestStories = () => {
   const [news, setNews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const allNews = async () => {
-    try {
+    try { 
       setIsLoading(true);
-      const res = await getNewsPosts();
+      const res = await getTrendingNews();
       if (res?.status === "success") {
         setNews(res?.news);
       }
@@ -54,7 +54,7 @@ const LatestStories = () => {
         <div className="latest-stories-container">
           <SectionTitle title={"Latest Stories"} />
           <div className="latest-stories-section">
-            {news?.slice(1, 10)?.map((post, index) => (
+            {news?.map((post, index) => (
               <article
                 key={index}
                 className="top-nine-post latest-stories-post"
