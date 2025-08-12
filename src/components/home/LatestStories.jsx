@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import SectionTitle from "../titles/SectionTitle";
 import { Link } from "react-router-dom";
-import { getTrendingNews } from "../../helper/apis";
+import { getLatestNews } from "../../helper/apis";
 
 const LatestStories = () => {
   const [news, setNews] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const allNews = async () => {
-    try { 
+    try {
       setIsLoading(true);
-      const res = await getTrendingNews();
+      const res = await getLatestNews();
       if (res?.status === "success") {
         setNews(res?.news);
       }

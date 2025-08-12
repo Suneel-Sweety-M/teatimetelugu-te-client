@@ -11,7 +11,7 @@ const LatestCollection = () => {
     const allNews = async () => {
       setIsLoading(true);
       try {
-        const res = await getHomeNewsPosts();
+        const res = await getHomeNewsPosts(); 
         if (res?.status === "success") {
           setNews(res?.news);
         }

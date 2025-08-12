@@ -332,6 +332,19 @@ export const getTrendingNews = async () => {
   }
 }; 
 
+export const getLatestNews = async () => {
+  try {
+    const res = await apiRequest({
+      url: "/news/latest",
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}; 
+
 export const getHomeNewsPosts = async () => {
   try {
     const res = await apiRequest({
@@ -398,7 +411,7 @@ export const getSearchNewsTelugu = async (q, skip = 0, limit = 9) => {
     const res = await apiRequest({
       url: `/news/search?q=${encodeURIComponent(q)}&skip=${skip}&limit=${limit}`,
       method: "GET",
-    });
+    }); 
     return res;
   } catch (err) {
     console.error(err);

@@ -16,6 +16,7 @@ import LatestStories from "../components/home/LatestStories";
 import CategoryTop from "../components/home/CategoryTop";
 import Discover from "../components/home/Discover";
 import PopupPoster from "../components/home/PopupPoster";
+import ScrollTop from "../components/scroll-top/ScrollTop";
 import { toast } from "react-toastify";
 import { getHomeLongAd, getHomeShortAd, getMoviePoster } from "../helper/apis";
 import ScrollNews from "../components/home/ScrollNews";
@@ -88,6 +89,7 @@ const Home = () => {
     "టీ టైం తెలుగు - Telugu News on AP and TS Politics, Movies and Gossips";
   return (
     <>
+      <ScrollTop />
       <Navbar />
       <div className="home-page main-page main-padding">
         <Featured />

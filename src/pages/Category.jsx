@@ -8,6 +8,7 @@ import CategoryPosts from "../components/category/CategoryPosts";
 import { useParams } from "react-router-dom";
 import { getCategoryLongAd, getCategoryShortAd } from "../helper/apis";
 import { toast } from "react-toastify";
+import ScrollTop from "../components/scroll-top/ScrollTop";
 
 const Category = () => {
   const { category } = useParams();
@@ -47,6 +48,8 @@ const Category = () => {
   useEffect(() => {
     if (category === "movies") {
       setTitle("సినిమా వార్తలు");
+    } else if (category === "news") {
+      setTitle("సామాన్య వార్తలు");
     } else if (category === "politics") {
       setTitle("రాజకీయ వార్తలు");
     } else if (category === "gossips") {
@@ -59,6 +62,8 @@ const Category = () => {
       setTitle("వీడియోలు");
     } else if (category === "reviews") {
       setTitle("సినిమా సమీక్షలు");
+    } else if (category === "sports") {
+      setTitle("క్రీడలు");
     } else {
       setTitle(category);
     }
@@ -93,6 +98,7 @@ const Category = () => {
         </a>
       </div>
       <Footer />
+      <ScrollTop />
     </>
   );
 };

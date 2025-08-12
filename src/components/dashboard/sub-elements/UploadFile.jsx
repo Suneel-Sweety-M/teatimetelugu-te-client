@@ -26,7 +26,6 @@ const UploadFile = ({ setIsUpload }) => {
   const submitFile = async (uploadedFile) => {
     try {
       setIsUploading(true);
-      console.log("Selected file:", uploadedFile); // Debug
 
       const formData = new FormData();
       formData.append("file", uploadedFile);
@@ -51,7 +50,7 @@ const UploadFile = ({ setIsUpload }) => {
       return toast.error("Please select a file!");
     }
     submitFile(f); 
-  };
+  }; 
 
   useEffect(() => {
     getLinks();

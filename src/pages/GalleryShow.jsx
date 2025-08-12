@@ -9,6 +9,7 @@ import { getNewsShortAd, getSingleGallery } from "../helper/apis";
 import moment from "moment";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import ScrollTop from "../components/scroll-top/ScrollTop";
 
 const GalleryShow = () => {
   const { id } = useParams();
@@ -327,6 +328,7 @@ const GalleryShow = () => {
         </div>
       </div>
       <Footer />
+      <ScrollTop />
 
       {isPopupOpen && (
         <div className="popup-container">

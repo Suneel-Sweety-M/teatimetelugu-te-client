@@ -10,6 +10,7 @@ import { getNewsShortAd, getSingleNews } from "../helper/apis";
 import moment from "moment";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
+import ScrollTop from "../components/scroll-top/ScrollTop";
 
 const SingleNews = () => {
   const { id } = useParams();
@@ -292,6 +293,7 @@ const SingleNews = () => {
         )}
       </div>
       <Footer />
+      <ScrollTop />
     </>
   );
 };

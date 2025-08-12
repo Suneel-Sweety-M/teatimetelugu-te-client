@@ -1,3 +1,4 @@
+// ✅ Telugu Search with working limit-loading per category
 import React, { useEffect, useState, useCallback } from "react";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
@@ -7,6 +8,7 @@ import { toast } from "react-toastify";
 import { getSearchNewsTelugu } from "../helper/apis";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
+import ScrollTop from "../components/scroll-top/ScrollTop";
 
 const CATEGORIES = [
   { key: "news", title: "న్యూస్" },
@@ -37,7 +39,7 @@ const Search = () => {
   const [hasSearched, setHasSearched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // For each category: items, skip count, hasMore
+  // Each category: items, skip count, hasMore
   const [searchData, setSearchData] = useState(() =>
     CATEGORIES.reduce((acc, cat) => {
       acc[cat.key] = { items: [], skip: 0, hasMore: true };
@@ -47,7 +49,7 @@ const Search = () => {
 
   const limit = 9;
 
-  // Convert input to Telugu using Google Input Tools API
+  // Convert input to Telugu
   const convertToTelugu = useCallback(async (text) => {
     if (!text.trim()) {
       setTeluguText("");
@@ -67,13 +69,12 @@ const Search = () => {
       } else {
         setTeluguText(text); // fallback
       }
-    } catch (err) {
-      console.error("Transliteration failed:", err);
-      setTeluguText(text); // fallback
+    } catch {
+      setTeluguText(text);
     }
   }, []);
 
-  // Search handler
+  // Search submit
   const handleSearch = (e) => {
     e.preventDefault();
     if (!searchText.trim()) {
@@ -82,62 +83,59 @@ const Search = () => {
     }
     navigate(`/search?q=${encodeURIComponent(searchText)}`);
     setHasSearched(true);
-    resetAndFetchAll();
+    fetchAllCategories(teluguText);
   };
 
-  // Reset searchData and fetch again
-  const resetAndFetchAll = useCallback(() => {
-    setSearchData(() =>
+  // Reset + fetch all categories
+  const fetchAllCategories = useCallback((term) => {
+    setSearchData(
       CATEGORIES.reduce((acc, cat) => {
         acc[cat.key] = { items: [], skip: 0, hasMore: true };
         return acc;
       }, {})
     );
-    CATEGORIES.forEach((cat) => fetchCategory(cat.key, 0));
-  }, [teluguText]);
+    CATEGORIES.forEach((cat) => fetchCategory(cat.key, term, 0));
+  }, []);
 
-  // Fetch results for a single category
+  // Fetch one category with skip/limit
   const fetchCategory = useCallback(
-  async (category, customSkip) => {
-    const current = searchData[category];
-    const skipVal = customSkip !== undefined ? customSkip : current.skip;
-    if (!current.hasMore && customSkip === undefined) return;
-
-    if (typeof teluguText !== "string" || !teluguText.trim()) return;
-
-    try {
-      setIsLoading(true);
-      const res = await getSearchNewsTelugu(teluguText, skipVal, limit);
-      console.log("API Response for Telugu:", res?.data); // 👈 debug
-      if (res?.status === "success") {
-        const catData = res.data[category];
-        if (Array.isArray(catData)) {
-          const newItems =
-            skipVal === 0 ? catData : [...current.items, ...catData];
-          const newSkip = skipVal + catData.length;
-          setSearchData((prev) => ({
-            ...prev,
-            [category]: {
-              items: newItems,
-              skip: newSkip,
-              hasMore: catData.length === limit,
-            },
-          }));
+    async (categoryKey, term, customSkip = 0) => {
+      if (!term.trim()) return;
+      try {
+        setIsLoading(true);
+        const res = await getSearchNewsTelugu(term, customSkip, limit);
+        if (res?.status === "success") {
+          const categoryResult = res.data[categoryKey];
+          if (categoryResult) {
+            setSearchData((prev) => {
+              const old = prev[categoryKey];
+              const newSkip = customSkip + limit;
+              return {
+                ...prev,
+                [categoryKey]: {
+                  items:
+                    customSkip === 0
+                      ? categoryResult.items
+                      : [...old.items, ...categoryResult.items],
+                  skip: newSkip,
+                  hasMore: newSkip < categoryResult.total,
+                },
+              };
+            });
+          }
+        } else {
+          toast.error(`"${categoryKey}" ఫలితాలు లోడ్ చేయలేకపోయాం`);
         }
-      } else {
+      } catch (err) {
         toast.error("ఫలితాలు తెచ్చే ప్రయత్నంలో లోపం జరిగింది!");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      console.error(err);
-      toast.error("ఫలితాలు తెచ్చే ప్రయత్నంలో లోపం జరిగింది!");
-    } finally {
-      setIsLoading(false);
-    }
-  },
-  [teluguText, searchData]
-);
+    },
+    []
+  );
 
-  // When query changes in URL
+  // On mount or URL change
   useEffect(() => {
     if (initialQuery) {
       setSearchText(initialQuery);
@@ -146,12 +144,12 @@ const Search = () => {
     }
   }, [initialQuery, convertToTelugu]);
 
-  // When teluguText updates, fetch results
+  // When Telugu text changes
   useEffect(() => {
     if (teluguText.trim()) {
-      resetAndFetchAll();
+      fetchAllCategories(teluguText);
     }
-  }, [teluguText, resetAndFetchAll]);
+  }, [teluguText, fetchAllCategories]);
 
   const renderPostItem = (item, category) => (
     <Link
@@ -197,7 +195,7 @@ const Search = () => {
 
   const renderCategory = (cat) => {
     const data = searchData[cat.key];
-    if (!data || data.items.length === 0) return null;
+    if (!data.items.length) return null;
     return (
       <div className="videos-category-container" key={cat.key}>
         <SectionTitle title={cat.title} nav={`/${cat.key}`} />
@@ -207,23 +205,32 @@ const Search = () => {
         {data.hasMore && (
           <button
             className="load-more-btn"
-            onClick={() => fetchCategory(cat.key)}
+            onClick={() => fetchCategory(cat.key, teluguText, data.skip)}
           >
-            <span className="btn-text">మరిన్ని లోడ్ చేయండి</span>
-            <span className="btn-icon">
-              <i className="fa-solid fa-arrow-rotate-right"></i>
-            </span>
+            {isLoading ? (
+              <>
+                <span className="btn-text">లోడ్ అవుతోంది...</span>
+                <span className="btn-icon spinner"></span>
+              </>
+            ) : (
+              <>
+                <span className="btn-text">మరిన్ని లోడ్ చేయండి</span>
+                <span className="btn-icon">
+                  <i className="fa-solid fa-arrow-rotate-right"></i>
+                </span>
+              </>
+            )}
           </button>
         )}
       </div>
     );
   };
 
-  const hasResults = Object.values(searchData).some((cat) => cat?.items?.length > 0);
+  const hasResults = Object.values(searchData).some(
+    (cat) => cat.items.length > 0
+  );
 
-  useEffect(()=> {
-    window.title = `టీ టైం తెలుగు - శోధించండి`;
-  }, []);
+  document.title = `Search ${teluguText || searchText}`;
 
   return (
     <>
@@ -232,22 +239,22 @@ const Search = () => {
         <TabTitle title="తెలుగులో శోధించండి" />
         <div className="search-page-container">
           <div className="search-container-top">
-            <form onSubmit={handleSearch} className="search-container-input-box">
+            <form
+              onSubmit={handleSearch}
+              className="search-container-input-box"
+            >
               <input
                 type="text"
                 placeholder="ఇక్కడ శోధించండి..."
                 value={searchText}
                 onChange={(e) => {
-                  const val = e.target.value;
-                  setSearchText(val);
-                  convertToTelugu(val);
+                  setSearchText(e.target.value);
+                  convertToTelugu(e.target.value);
                 }}
-                aria-label="Search input"
               />
               <button
                 type="submit"
                 className="btn search-btn"
-                aria-label="Search"
                 disabled={isLoading}
               >
                 {isLoading ? "శోధిస్తోంది..." : "Search"}
@@ -270,7 +277,7 @@ const Search = () => {
             </div>
           ) : hasResults ? (
             <div className="all-videos-container">
-              {CATEGORIES.map((c) => renderCategory(c))}
+              {CATEGORIES.map((cat) => renderCategory(cat))}
             </div>
           ) : (
             hasSearched && (
@@ -282,6 +289,7 @@ const Search = () => {
         </div>
       </div>
       <Footer />
+      <ScrollTop />
     </>
   );
 };

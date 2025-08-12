@@ -140,7 +140,7 @@ const DasAllNews = () => {
                 <option value="movies">Movies</option>
                 <option value="gossips">Gossips</option>
                 <option value="show">Show</option>
-                <option value="collections">Collections</option>
+                {/* <option value="collections">Collections</option> */}
                 <option value="reviews">Reviews</option>
                 <option value="ott">OTT</option>
                 <option value="sports">Sports</option>
