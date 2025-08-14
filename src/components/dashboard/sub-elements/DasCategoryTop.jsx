@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from "react";
-import {
-  addTrendsPosts,
-  getNewsPosts,
-  getTrendsPosts,
-} from "../../../helper/apis";
-import { toast } from "react-toastify";
 import moment from "moment";
+import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import {
+  addCategoryTopPosts,
+  getCategoryTopPosts,
+  getCategoryPosts,
+} from "../../../helper/apis";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const DasTrends = () => {
+const categories = ["movies", "news", "gossips", "ott", "politics", "reviews"];
+
+const DasCategoryTop = () => {
   const { user } = useSelector((state) => state.te_teatimetelugu);
   const navigate = useNavigate();
 
@@ -17,8 +19,9 @@ const DasTrends = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [news, setNews] = useState([]);
-  const [trendsNews, setTrendsNews] = useState([]);
-  const [selected, setSelected] = useState([]); // [{ news, position }]
+  const [categoryTopNews, setCategoryTopNews] = useState([]);
+  const [selected, setSelected] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("news");
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
@@ -47,12 +50,11 @@ const DasTrends = () => {
 
   const handleCheckboxChange = (id) => {
     const exists = selected.find((s) => s.id === id);
-
     if (exists) {
       setSelected((prev) => prev.filter((s) => s.id !== id));
     } else {
-      if (selected.length === 5) {
-        toast.info("You have reached max limit.");
+      if (selected.length === 9) {
+        toast.info("You have reached max limit of 9.");
         return;
       }
       setSelected((prev) => [...prev, { id, position: null }]);
@@ -61,70 +63,75 @@ const DasTrends = () => {
 
   const handlePositionChange = (id, position) => {
     if (selected.some((s) => s.position === position)) {
-      toast.error("Position already selected for another post.");
+      toast.error("Position already selected!");
       return;
     }
-
     setSelected((prev) =>
       prev.map((s) => (s.id === id ? { ...s, position } : s))
     );
   };
 
-  const allNews = async () => {
+  const allNews = useCallback(async () => {
     try {
-      const res = await getNewsPosts();
+      const res = await getCategoryPosts(selectedCategory, "");
       if (res?.status === "success") {
         setNews(res?.news);
       }
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [selectedCategory]);
 
-  const allTrendsPosts = async () => {
+  const allCategoryTopPosts = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await getTrendsPosts();
+      const res = await getCategoryTopPosts(selectedCategory);
       if (res?.status === "success") {
-        setTrendsNews(res?.news);
-        const ids = res?.news.map((newsItem) => ({ 
-          id: newsItem._id,
-          position: newsItem.position,
+        setCategoryTopNews(res?.posts);
+        const formatted = res.posts.map((item) => ({
+          id: item._id,
+          position: item.position,
         }));
-        setSelected(ids);
+        setSelected(formatted);
+      } else {
+        setCategoryTopNews([]);
+        setSelected([]);
       }
     } catch (error) {
       console.log(error);
     }
     setIsLoading(false);
-  };
+  }, [selectedCategory]);
 
   const handleSave = async () => {
-    if (selected?.length < 5) {
-      toast.info("Select 5 posts");
+    if (selected.length !== 9) {
+      toast.info("Select exactly 9 posts.");
       return;
     }
+    const incomplete = selected.some((s) => !s.position);
+    if (incomplete) {
+      toast.error("Assign all positions (1–9).");
+      return;
+    }
+
+    const posts = selected.map((s) => ({ news: s.id, position: s.position }));
     setIsUploading(true);
-
-    const items = selected.map((item) => ({
-      news: item.id, // change key to match backend schema
-      position: item.position,
-    }));
-
     try {
-      const res = await addTrendsPosts({ items });
+      const res = await addCategoryTopPosts({
+        category: selectedCategory,
+        posts,
+      });
       if (res?.status === "success") {
         toast.success(res?.message);
+        allCategoryTopPosts();
         setPopupNews(false);
-        allTrendsPosts();
       } else {
         toast.error(res?.message);
       }
-      setIsUploading(false);
     } catch (error) {
       console.log(error);
-      setIsUploading(false);
     }
+    setIsUploading(false);
   };
 
   const handleLink = (id) => {
@@ -132,21 +139,39 @@ const DasTrends = () => {
   };
 
   const handleView = (news) => {
-    navigate(`/${news?.category}/${news?._id}`);
+    navigate(`/${news?.category}/${news?.newsId}`);
   };
 
   useEffect(() => {
-    allTrendsPosts();
-    allNews();
-  }, []);
+    const fetchData = async () => {
+      await Promise.all([allCategoryTopPosts(), allNews()]);
+    };
+    fetchData();
+  }, [selectedCategory, allCategoryTopPosts, allNews]);
+
   return (
     <>
       <div className="das-news-container">
-        <i
-          className="fa fa-pen-to-square das-float-right cp"
-          onClick={() => setPopupNews(true)}
-        ></i>
-        <div className="das-news-container-title">Trends</div>
+        <div className="das-d-flex das-jcsb">
+          <div className="das-news-container-title">Category Top Posts</div>
+          <div>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="cp nfc-filter mr10"
+            >
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </option>
+              ))}
+            </select>
+            <i
+              className="fa fa-pen-to-square das-ml10 cp"
+              onClick={() => setPopupNews(true)}
+            ></i>
+          </div>
+        </div>
 
         {!isLoading ? (
           <table className="das-all-news-section">
@@ -161,9 +186,9 @@ const DasTrends = () => {
                 <th className="table-action">Action</th>
               </tr>
             </thead>
-            {trendsNews?.length > 0 ? (
+            {categoryTopNews?.length > 0 ? (
               <tbody>
-                {trendsNews?.map((item, index) => (
+                {categoryTopNews?.map((item, index) => (
                   <tr key={index}>
                     <td className="table-sn">{index + 1}</td>
                     <td className="table-title">{item?.title}</td>
@@ -199,9 +224,6 @@ const DasTrends = () => {
             <div className="snlc-text"></div>
             <div className="snlc-text"></div>
             <div className="snlc-text"></div>
-            <div className="snlc-text"></div>
-            <div className="snlc-text"></div>
-            <div className="snlc-text"></div>
           </div>
         )}
       </div>
@@ -211,7 +233,9 @@ const DasTrends = () => {
           <div className="br5 popup-img p10">
             <div className="das-news-container">
               <div className="popup-news-top das-d-flex das-jcsb">
-                <div className="das-news-container-title">Select Trends</div>
+                <div className="das-news-container-title">
+                  Select Top 9 for {selectedCategory}
+                </div>
                 <span className="popup-news-top-x das-mx20">
                   <i
                     className="fa fa-xmark"
@@ -220,83 +244,70 @@ const DasTrends = () => {
                 </span>
               </div>
 
-              {!isLoading ? (
-                <table className="das-all-news-section">
-                  <thead>
-                    <tr>
-                      <th className="table-checkbox"></th>
-                      <th className="table-sn">S.No.</th>
-                      <th className="table-title">Title</th>
-                      <th className="table-image">Image</th>
-                      <th className="table-category">Category</th>
-                      <th className="table-date">Date</th>
-                      <th className="table-status">Writer</th>
-                      <th>Position</th>
+              <table className="das-all-news-section">
+                <thead>
+                  <tr>
+                    <th className="table-checkbox"></th>
+                    <th className="table-sn">S.No.</th>
+                    <th className="table-title">Title</th>
+                    <th className="table-image">Image</th>
+                    <th className="table-category">Category</th>
+                    <th className="table-date">Date</th>
+                    <th className="table-status">Writer</th>
+                    <th>Position</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentNews?.map((item, index) => (
+                    <tr key={index}>
+                      <td className="table-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={selected.some((s) => s.id === item._id)}
+                          onChange={() => handleCheckboxChange(item._id)}
+                        />
+                      </td>
+                      <td className="table-sn">
+                        {indexOfFirstItem + index + 1}
+                      </td>
+                      <td className="table-title">{item?.title}</td>
+                      <td className="table-image">
+                        <img src={item?.mainUrl} alt="pic" />
+                      </td>
+                      <td className="table-category">{item?.category}</td>
+                      <td className="table-date">
+                        {moment(item?.createdAt).format("h:mm a, D MMMM YYYY")}
+                      </td>
+                      <td className="table-status">
+                        <span>{item?.postedBy?.fullName}</span>
+                      </td>
+                      <td>
+                        <select
+                          className="ml10"
+                          disabled={!selected.some((s) => s.id === item._id)}
+                          value={
+                            selected.find((s) => s.id === item._id)?.position ||
+                            ""
+                          }
+                          onChange={(e) =>
+                            handlePositionChange(
+                              item._id,
+                              parseInt(e.target.value)
+                            )
+                          }
+                        >
+                          <option value="">Pos</option>
+                          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((pos) => (
+                            <option key={pos} value={pos}>
+                              {pos}
+                            </option>
+                          ))}
+                        </select>
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody>
-                    {currentNews?.map((item, index) => (
-                      <tr key={index}>
-                        <td className="table-checkbox">
-                          <input
-                            type="checkbox"
-                            checked={selected.some((s) => s.id === item?._id)}
-                            onChange={() => handleCheckboxChange(item?._id)}
-                          />
-                        </td>
-                        <td className="table-sn">
-                          {indexOfFirstItem + index + 1}
-                        </td>
-                        <td className="table-title">{item?.title}</td>
-                        <td className="table-image">
-                          <img src={item?.mainUrl} alt="pic" />
-                        </td>
-                        <td className="table-category">{item?.category}</td>
-                        <td className="table-date">
-                          {moment(item?.createdAt).format(
-                            "h:mm a, D MMMM YYYY"
-                          )}
-                        </td>
-                        <td className="table-status">
-                          <span>{item?.postedBy?.fullName}</span>
-                        </td>
-                        <td>
-                          <select
-                            className="ml10"
-                            disabled={!selected.some((s) => s.id === item._id)}
-                            value={
-                              selected.find((s) => s.id === item._id)
-                                ?.position || ""
-                            }
-                            onChange={(e) =>
-                              handlePositionChange(
-                                item._id,
-                                parseInt(e.target.value)
-                              )
-                            }
-                          >
-                            <option value="">Pos</option>
-                            {[1, 2, 3, 4, 5].map((pos) => (
-                              <option key={pos} value={pos}>
-                                {pos}
-                              </option>
-                            ))}
-                          </select>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              ) : (
-                <div>
-                  <div className="snlc-text"></div>
-                  <div className="snlc-text"></div>
-                  <div className="snlc-text"></div>
-                  <div className="snlc-text"></div>
-                  <div className="snlc-text"></div>
-                  <div className="snlc-text"></div>
-                </div>
-              )}
+                  ))}
+                </tbody>
+              </table>
 
               <div className="das-all-news-bottom">
                 <div className="news-popup-btns das-mx10">
@@ -345,4 +356,4 @@ const DasTrends = () => {
   );
 };
 
-export default DasTrends;
+export default DasCategoryTop;

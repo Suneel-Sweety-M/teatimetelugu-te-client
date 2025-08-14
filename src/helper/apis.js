@@ -4,7 +4,7 @@ import { logout } from "../redux/userSlice";
 const API_URL = process.env.REACT_APP_API_URL;
 
 export const API = axios.create({
-  baseURL: API_URL, 
+  baseURL: API_URL,
   responseType: "json",
   withCredentials: true,
 });
@@ -221,7 +221,7 @@ export const addGalleryPosts = async (data) => {
 
 export const getGalleryPosts = async () => {
   try {
-    const res = await apiRequest({ 
+    const res = await apiRequest({
       url: "/gallery",
       method: "GET",
     });
@@ -317,7 +317,20 @@ export const getNewsPosts = async () => {
   } catch (error) {
     console.log(error);
   }
-}; 
+};
+
+export const getCategoryPosts = async (category, subCategory) => {
+  try {
+    const res = await apiRequest({
+      url: `/news?category=${category}&subCategory=${subCategory}`,
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const getTrendingNews = async () => {
   try {
@@ -330,7 +343,7 @@ export const getTrendingNews = async () => {
   } catch (error) {
     console.log(error);
   }
-}; 
+};
 
 export const getLatestNews = async () => {
   try {
@@ -343,7 +356,7 @@ export const getLatestNews = async () => {
   } catch (error) {
     console.log(error);
   }
-}; 
+};
 
 export const getHomeNewsPosts = async () => {
   try {
@@ -356,14 +369,14 @@ export const getHomeNewsPosts = async () => {
   } catch (error) {
     console.log(error);
   }
-}; 
+};
 
 export const getHomeVideos = async (subCategory, limit) => {
   try {
     const res = await apiRequest({
       url: "/videos/home",
       method: "GET",
-      params: { 
+      params: {
         subCategory,
         limit,
       },
@@ -373,7 +386,7 @@ export const getHomeVideos = async (subCategory, limit) => {
   } catch (error) {
     console.log(error);
   }
-}; 
+};
 
 export const getFilteredNews = async (category, time, searchText, writer) => {
   const url =
@@ -409,9 +422,11 @@ export const getSearchNews = async (q) => {
 export const getSearchNewsTelugu = async (q, skip = 0, limit = 9) => {
   try {
     const res = await apiRequest({
-      url: `/news/search?q=${encodeURIComponent(q)}&skip=${skip}&limit=${limit}`,
+      url: `/news/search?q=${encodeURIComponent(
+        q
+      )}&skip=${skip}&limit=${limit}`,
       method: "GET",
-    }); 
+    });
     return res;
   } catch (err) {
     console.error(err);
@@ -516,7 +531,7 @@ export const getSingleNews = async (id) => {
   }
 };
 
-export const addFileForLink = async (data) => { 
+export const addFileForLink = async (data) => {
   try {
     const res = await apiRequest({
       url: "/dashboard/set-files-links",
@@ -651,7 +666,6 @@ export const addHotTopics = async (data) => {
   }
 };
 
-
 export const getHotTopics = async () => {
   try {
     const res = await apiRequest({
@@ -665,6 +679,59 @@ export const getHotTopics = async () => {
   }
 };
 
+export const addBreakingNews = async (data) => {
+  try {
+    const res = await apiRequest({
+      url: "/dashboard/set-breaking-news",
+      method: "POST",
+      data,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getBreakingNews = async () => {
+  try {
+    const res = await apiRequest({
+      url: "/dashboard/get-breaking-news",
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addCategoryTopPosts = async (data) => {
+  try {
+    const res = await apiRequest({
+      url: "/dashboard/set-category-top",
+      method: "POST",
+      data,
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getCategoryTopPosts = async (category) => {
+  try {
+    const res = await apiRequest({
+      url: `/dashboard/get-category-top?category=${category}`,
+      method: "GET",
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const getMovieReleases = async () => {
   try {
@@ -984,9 +1051,9 @@ export const getAllVideos = async () => {
 export const getQueryVideos = async (category, time, searchText) => {
   try {
     const url =
-    category || time || searchText
-      ? `/videos/query?searchText=${searchText}&category=${category}&postedTime=${time}`
-      : "/videos/query";
+      category || time || searchText
+        ? `/videos/query?searchText=${searchText}&category=${category}&postedTime=${time}`
+        : "/videos/query";
     const res = await apiRequest({
       url: url,
       method: "GET",

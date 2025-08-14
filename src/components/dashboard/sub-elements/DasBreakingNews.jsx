@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import {
-  addTrendsPosts,
+  addBreakingNews,
   getNewsPosts,
-  getTrendsPosts,
+  getBreakingNews,
 } from "../../../helper/apis";
 import { toast } from "react-toastify";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const DasTrends = () => {
+const DasBreakingNews = () => {
   const { user } = useSelector((state) => state.te_teatimetelugu);
   const navigate = useNavigate();
 
@@ -17,7 +17,7 @@ const DasTrends = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [news, setNews] = useState([]);
-  const [trendsNews, setTrendsNews] = useState([]);
+  const [breakingNews, setBreakingNews] = useState([]);
   const [selected, setSelected] = useState([]); // [{ news, position }]
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,10 +51,6 @@ const DasTrends = () => {
     if (exists) {
       setSelected((prev) => prev.filter((s) => s.id !== id));
     } else {
-      if (selected.length === 5) {
-        toast.info("You have reached max limit.");
-        return;
-      }
       setSelected((prev) => [...prev, { id, position: null }]);
     }
   };
@@ -81,13 +77,13 @@ const DasTrends = () => {
     }
   };
 
-  const allTrendsPosts = async () => {
+  const allBreakingNewsPosts = async () => {
     setIsLoading(true);
     try {
-      const res = await getTrendsPosts();
+      const res = await getBreakingNews();
       if (res?.status === "success") {
-        setTrendsNews(res?.news);
-        const ids = res?.news.map((newsItem) => ({ 
+        setBreakingNews(res?.news);
+        const ids = res?.news.map((newsItem) => ({
           id: newsItem._id,
           position: newsItem.position,
         }));
@@ -100,23 +96,19 @@ const DasTrends = () => {
   };
 
   const handleSave = async () => {
-    if (selected?.length < 5) {
-      toast.info("Select 5 posts");
-      return;
-    }
     setIsUploading(true);
 
     const items = selected.map((item) => ({
-      news: item.id, // change key to match backend schema
+      news: item.id,
       position: item.position,
     }));
 
     try {
-      const res = await addTrendsPosts({ items });
+      const res = await addBreakingNews({ items });
       if (res?.status === "success") {
         toast.success(res?.message);
         setPopupNews(false);
-        allTrendsPosts();
+        allBreakingNewsPosts();
       } else {
         toast.error(res?.message);
       }
@@ -136,9 +128,10 @@ const DasTrends = () => {
   };
 
   useEffect(() => {
-    allTrendsPosts();
+    allBreakingNewsPosts();
     allNews();
   }, []);
+
   return (
     <>
       <div className="das-news-container">
@@ -146,7 +139,7 @@ const DasTrends = () => {
           className="fa fa-pen-to-square das-float-right cp"
           onClick={() => setPopupNews(true)}
         ></i>
-        <div className="das-news-container-title">Trends</div>
+        <div className="das-news-container-title">Breaking News</div>
 
         {!isLoading ? (
           <table className="das-all-news-section">
@@ -161,9 +154,9 @@ const DasTrends = () => {
                 <th className="table-action">Action</th>
               </tr>
             </thead>
-            {trendsNews?.length > 0 ? (
+            {breakingNews?.length > 0 ? (
               <tbody>
-                {trendsNews?.map((item, index) => (
+                {breakingNews?.map((item, index) => (
                   <tr key={index}>
                     <td className="table-sn">{index + 1}</td>
                     <td className="table-title">{item?.title}</td>
@@ -191,7 +184,7 @@ const DasTrends = () => {
                 ))}
               </tbody>
             ) : (
-              <p className="m10 dfc w100">No posts</p>
+              <p className="m10 dfc w100">No breaking news posts</p>
             )}
           </table>
         ) : (
@@ -211,7 +204,9 @@ const DasTrends = () => {
           <div className="br5 popup-img p10">
             <div className="das-news-container">
               <div className="popup-news-top das-d-flex das-jcsb">
-                <div className="das-news-container-title">Select Trends</div>
+                <div className="das-news-container-title">
+                  Select Breaking News
+                </div>
                 <span className="popup-news-top-x das-mx20">
                   <i
                     className="fa fa-xmark"
@@ -276,7 +271,10 @@ const DasTrends = () => {
                             }
                           >
                             <option value="">Pos</option>
-                            {[1, 2, 3, 4, 5].map((pos) => (
+                            {Array.from(
+                              { length: selected.length },
+                              (_, i) => i + 1
+                            ).map((pos) => (
                               <option key={pos} value={pos}>
                                 {pos}
                               </option>
@@ -345,4 +343,4 @@ const DasTrends = () => {
   );
 };
 
-export default DasTrends;
+export default DasBreakingNews;
