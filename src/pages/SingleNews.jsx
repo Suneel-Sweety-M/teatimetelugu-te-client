@@ -11,6 +11,7 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import ScrollTop from "../components/scroll-top/ScrollTop";
+import ReadButton from "../components/single-news/ReadButton";
 
 const SingleNews = () => {
   const { id } = useParams();
@@ -111,6 +112,7 @@ const SingleNews = () => {
                     <i className="fa-regular fa-comments mr5"></i>
                     {commentsCount} <span>Comments</span>
                   </span>
+                  <ReadButton news={news} />
                 </span>
                 <div className="single-news-content-container">
                   {news?.subCategory !== "trailer" && (

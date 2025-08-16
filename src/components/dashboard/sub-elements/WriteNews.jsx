@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import JoditEditor from "jodit-react";
 import { toast } from "react-toastify";
 import { addNewsPost } from "../../../helper/apis";
-import UploadFile from "./UploadFile";
+import UploadFile from "./UploadFile"; 
 
 const WriteNews = () => {
   const [title, setTitle] = useState("");

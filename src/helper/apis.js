@@ -531,6 +531,23 @@ export const getSingleNews = async (id) => {
   }
 };
 
+export const getSpeech = async ({ text, newsId }) => {
+  try {
+    const res = await apiRequest({
+      url: `/speech/text-to-speech`,
+      method: "POST",
+      data: {
+        text,
+        newsId,
+      },
+    });
+
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}; 
+
 export const addFileForLink = async (data) => {
   try {
     const res = await apiRequest({
