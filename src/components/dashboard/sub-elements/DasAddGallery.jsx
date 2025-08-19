@@ -170,6 +170,7 @@ const DasAddGallery = () => {
                 </label>
               </div>
             </div>
+
             <div className="other-details">
               <div className="wns-box das-my20 das-py20">
                 <h3 className="">Category</h3>
@@ -210,14 +211,6 @@ const DasAddGallery = () => {
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="preview-box bgc-fff das-m20 p20">
-        <h4>Preview</h4>
-        <div
-          dangerouslySetInnerHTML={{ __html: description }}
-          className="description-preview"
-        />
       </div>
 
       {isUpload && <UploadFile setIsUpload={setIsUpload} />}

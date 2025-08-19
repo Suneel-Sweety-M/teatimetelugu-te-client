@@ -9,6 +9,7 @@ const EditNews = () => {
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
+  const [enTitle, setEnTitle] = useState("");
   const [category, setCategory] = useState("");
   const [subCategory, setSubCategory] = useState("");
   const [description, setDescription] = useState("");
@@ -16,9 +17,27 @@ const EditNews = () => {
   const [mainUrl, setMainUrl] = useState(
     "https://res.cloudinary.com/demmiusik/image/upload/v1729620426/post-default-pic_jbf1gl.png"
   );
+  const [mainFile, setMainFile] = useState(null);
+  const [preview, setPreview] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   // const [isLoading, setIsLoading] = useState(false);
-  // const [tags, setTags] = useState([]);
+  const [tagsText, setTagsText] = useState("");
+  const [tags, setTags] = useState([]);
+  const [movieRating, setMovieRating] = useState(0);
+
+  const handleImageUpload = (event) => {
+    try {
+      const file = event.target.files[0];
+      setMainFile(file);
+
+      if (file) {
+        const previewUrl = URL.createObjectURL(file);
+        setPreview(previewUrl);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getNews = useCallback(async () => {
     if (!newsId || newsId.length !== 24) {
@@ -35,6 +54,7 @@ const EditNews = () => {
         setSubCategory(res?.news?.subCategory);
         setDescription(res?.news?.description);
         setMainUrl(res?.news?.mainUrl);
+        setTags(res?.news?.tags);
       } else {
         navigate("/");
       }
@@ -49,6 +69,21 @@ const EditNews = () => {
     getNews();
   }, [getNews]);
 
+  const handleTags = async (e) => {
+    e.preventDefault();
+    if (!tagsText || tagsText === "") {
+      toast.info("Write tags...!");
+      return;
+    }
+    const splitedTags = tagsText.split(", ");
+    setTags([...tags, ...splitedTags]);
+    setTagsText("");
+  };
+
+  const removeTag = (tagToRemove) => {
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
+
   const handlePost = async () => {
     try {
       if (!title || title === "") {
@@ -57,16 +92,22 @@ const EditNews = () => {
       }
 
       setIsSaving(true);
-      const data = { title, category, subCategory, description };
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("enTitle", enTitle);
+      formData.append("category", category);
+      formData.append("subCategory", subCategory);
+      formData.append("description", description);
+      formData.append("mainFile", mainFile);
+      formData.append("movieRating", movieRating);
+      tags.forEach((tag) => {
+        formData.append("tags[]", tag); // Use "tags[]" for array notation
+      });
 
-      const res = await editNewsPost(data, newsId);
+      const res = await editNewsPost(formData, newsId);
 
       if (res?.status === "success") {
         toast.success(res?.message);
-        setTitle("");
-        setCategory("");
-        setSubCategory("");
-        setDescription("");
         setIsSaving(false);
         getNews();
       } else {
@@ -79,17 +120,18 @@ const EditNews = () => {
       setIsSaving(false);
     }
   };
+
   return (
     <>
       <div className="write-news-container das-my20">
         <div className="das-news-container">
-          <div className="das-news-container-title">Write News</div>
+          <div className="das-news-container-title">Edit News</div>
           <div className="write-news-section">
             <div className="wns-box das-my20 das-py20">
-              <h3 className="">Add Title</h3>
+              <h3 className="">Add Telugu Title</h3>
               <input
                 type="text"
-                placeholder="Exiting News..."
+                placeholder="Loading..."
                 className="br5"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -97,11 +139,30 @@ const EditNews = () => {
             </div>
 
             <div className="wns-box das-my20 das-py20">
-              <h3 className="">Main Image</h3>
-              <div className="preview-img cp">
-                <img src={mainUrl} alt="uploaded-pic" />
-              </div>
+              <h3 className="">Add English Title</h3>
+              <input
+                type="text"
+                placeholder="NOTE: Change if you changed telugu title"
+                className="br5"
+                value={enTitle}
+                onChange={(e) => setEnTitle(e.target.value)}
+              />
             </div>
+
+            <div className="wns-box das-my20 das-py20">
+              <h3 className="">Main Image</h3>
+              <input
+                type="file"
+                accept="image/*, gif/*"
+                onChange={handleImageUpload}
+                style={{ display: "none" }}
+                id="file"
+              />
+              <label htmlFor="file" className="preview-img cp">
+                <img src={preview || mainUrl} alt="uploaded-pic" />
+              </label>
+            </div>
+
             <div className="wns-box das-my20 das-py20">
               <div className="das-d-flex das-jcsb">
                 <h3 className="">Add Description</h3>
@@ -120,6 +181,34 @@ const EditNews = () => {
                   setDescription(newContent);
                 }}
               />
+            </div>
+            <div className="wns-box das-my20 das-py20">
+              <h3 className="">Add Tags</h3>
+              <form onSubmit={handleTags} className="das-d-flex pt10">
+                <input
+                  type="text"
+                  placeholder="Ex. Chandrababu, Pawan Kalyan, Andhra Pradesh"
+                  className="br5"
+                  value={tagsText}
+                  onChange={(e) => setTagsText(e.target.value)}
+                />
+                <button type="submit" className="btn save-btn">
+                  Add
+                </button>
+              </form>
+              {tags?.length > 0 && (
+                <div className="wns-box-all-tags">
+                  {tags?.map((tag, index) => (
+                    <div className="wns-box-tag box-shadow p10 m10" key={index}>
+                      <span className="mr10">{tag}</span>
+                      <i
+                        className="fa fa-xmark cp"
+                        onClick={() => removeTag(tag)}
+                      ></i>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
             <div className="other-details">
               <div className="wns-box das-my20 das-py20">
@@ -252,9 +341,42 @@ const EditNews = () => {
                   {category === "reviews" && (
                     <option value="rerelease">Re-release</option>
                   )}
+
+                  {category === "sports" && (
+                    <option value="cricket">Cricket</option>
+                  )}
+                  {category === "sports" && (
+                    <option value="football">Football</option>
+                  )}
+                  {category === "sports" && (
+                    <option value="olympics">Olympics</option>
+                  )}
                 </select>
               </div>
             </div>
+
+            {category === "reviews" && (
+              <div className="other-details">
+                <div className="wns-box das-my20 das-py20">
+                  <h3 className="">Movie Rating</h3>
+                  <select
+                    name=""
+                    id=""
+                    className="br5"
+                    value={movieRating}
+                    onChange={(e) => setMovieRating(e.target.value)}
+                  >
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </div>
+              </div>
+            )}
+
             <div className="other-details">
               <div className="cancel-news-btn btn">Cancel</div>
               {!isSaving ? (

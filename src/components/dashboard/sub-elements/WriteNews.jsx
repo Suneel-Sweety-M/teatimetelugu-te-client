@@ -271,12 +271,6 @@ const WriteNews = () => {
                   {category === "movies" && (
                     <option value="south">South Cinema</option>
                   )}
-                  {/* {category === "movies" && (
-                    <option value="north">North Cinema</option>
-                  )}
-                  {category === "movies" && (
-                    <option value="trailer">Trailer</option>
-                  )} */}
                   {category === "movies" && (
                     <option value="collections">Collections</option>
                   )} 
@@ -334,6 +328,15 @@ const WriteNews = () => {
                   {category === "reviews" && <option value="ott">OTT</option>}
                   {category === "reviews" && (
                     <option value="rerelease">Re-release</option>
+                  )}
+                  {category === "sports" && (
+                    <option value="cricket">Cricket</option>
+                  )}
+                  {category === "sports" && (
+                    <option value="football">Football</option>
+                  )}
+                  {category === "sports" && (
+                    <option value="olympics">Olympics</option>
                   )}
                 </select>
               </div>

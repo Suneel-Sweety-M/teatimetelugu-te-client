@@ -73,7 +73,7 @@
 .navbar-pages-section {
   background-color: black;
   color: #fff;
-  padding: 8px 24px;
+  padding: 3px 24px;
   font-size: 13px;
   display: flex;
   align-items: center;
@@ -87,6 +87,7 @@
 .navbar-all-tabs .nav-tab {
   margin: 0 5px;
   font-size: 15px;
+  font-weight: 600;
   padding: 12px;
 }
 
@@ -236,7 +237,7 @@
   color: #f25a23;
 }
 
-.mobile-logout-btn{
+.mobile-logout-btn {
   border: none;
   outline: none;
   background-color: inherit;

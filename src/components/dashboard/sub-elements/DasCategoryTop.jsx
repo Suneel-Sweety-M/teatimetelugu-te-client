@@ -9,7 +9,15 @@ import {
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const categories = ["movies", "news", "gossips", "ott", "politics", "reviews"];
+const categories = [
+  "news",
+  "politics",
+  "movies",
+  "gossips",
+  "reviews",
+  "ott",
+  "sports",
+];
 
 const DasCategoryTop = () => {
   const { user } = useSelector((state) => state.te_teatimetelugu);
@@ -104,13 +112,9 @@ const DasCategoryTop = () => {
   }, [selectedCategory]);
 
   const handleSave = async () => {
-    if (selected.length !== 9) {
-      toast.info("Select exactly 9 posts.");
-      return;
-    }
     const incomplete = selected.some((s) => !s.position);
     if (incomplete) {
-      toast.error("Assign all positions (1–9).");
+      toast.error("Assign all positions");
       return;
     }
 
@@ -119,7 +123,7 @@ const DasCategoryTop = () => {
     try {
       const res = await addCategoryTopPosts({
         category: selectedCategory,
-        posts,
+        posts: posts,
       });
       if (res?.status === "success") {
         toast.success(res?.message);
@@ -130,6 +134,7 @@ const DasCategoryTop = () => {
       }
     } catch (error) {
       console.log(error);
+      toast.error("Failed to update top posts");
     }
     setIsUploading(false);
   };
@@ -234,7 +239,7 @@ const DasCategoryTop = () => {
             <div className="das-news-container">
               <div className="popup-news-top das-d-flex das-jcsb">
                 <div className="das-news-container-title">
-                  Select Top 9 for {selectedCategory}
+                  Select Top News for {selectedCategory}
                 </div>
                 <span className="popup-news-top-x das-mx20">
                   <i

@@ -1617,11 +1617,11 @@
   background-color: #999;
 }
 
-/* ====== Breaking News ====== */ 
+/* ====== Breaking News ====== */
 .breaking-news-container {
   width: 100%;
   position: relative;
-  margin-bottom: 20px;
+  /* margin-bottom: 20px; */
 }
 
 /* Section Title - Adjust if needed */
@@ -1773,11 +1773,11 @@
   .breaking-news-wrapper.needs-scrolling {
     padding: 0 30px;
   }
-  
+
   .breaking-news-container {
     padding: 15px;
   }
-  
+
   .scroll-button {
     width: 30px;
     height: 30px;
