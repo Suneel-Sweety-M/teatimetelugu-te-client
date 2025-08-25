@@ -149,32 +149,32 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
     () =>
       [
         {
-          type: "సంతోషం",
+          type: "Happy",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/happy-emoji_inhxsm.png",
         },
         {
-          type: "సాధారణ",
+          type: "Normal",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/normal-emoji_gzom13.png",
         },
         {
-          type: "నవ్వించాడు",
+          type: "Amused",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/amused-emoji_urhf7o.png",
         },
         {
-          type: "హాస్యాస్పదం",
+          type: "Funny",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/funny-emoji_pxilxx.png",
         },
         {
-          type: "కోపం",
+          type: "Angry",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/angry-emoji_fowci4.png",
         },
         {
-          type: "దుఃఖం",
+          type: "Sad",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/sad-emoji_lrx7hc.png",
         },
@@ -201,6 +201,18 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
       })),
     [reactionsArray, user?._id]
   );
+
+  const teluguReactionText = (type) => {
+    const reactionTexts = {
+      Happy: "సంతోషం",
+      Normal: "సాధారణ",
+      Amused: "నవ్వించారు",
+      Funny: "హాస్యాస్పదం",
+      Angry: "కోపం",
+      Sad: "దుఃఖం",
+    };
+    return reactionTexts[type] || type;
+  };
 
   const handleAddComment = async () => {
     try {
@@ -328,7 +340,7 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
                     color: reaction.reacted ? "orange" : "inherit",
                   }}
                 >
-                  {reaction.type}
+                  {teluguReactionText(reaction.type)}
                 </span>
                 <span
                   className="reaction-percentage"

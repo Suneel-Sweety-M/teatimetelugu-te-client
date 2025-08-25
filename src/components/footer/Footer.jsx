@@ -20,7 +20,7 @@ const Footer = () => {
         <span className="copyright-text">
           కాపీరైట్ © 2025 అన్ని హక్కులు{" "}
           <a href="https://eagleiitech.com" target="blank">
-            ఈగిల్ ఐ టెక్నాలజీస్ (Eagle Eye Technologies)
+            ఈగల్ ఐ టెక్నాలజీస్ (Eagle Eye Technologies)
           </a>
           {" "}సొంతం.
         </span>
