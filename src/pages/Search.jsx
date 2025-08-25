@@ -1,109 +1,61 @@
-// ✅ Telugu Search with working limit-loading per category
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useMemo, useCallback } from "react";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
 import TabTitle from "../components/titles/TabTitle";
-import SectionTitle from "../components/titles/SectionTitle";
 import { toast } from "react-toastify";
-import { getSearchNewsTelugu } from "../helper/apis";
+import { getSearchNews } from "../helper/apis";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import SectionTitle from "../components/titles/SectionTitle";
 import moment from "moment";
 import ScrollTop from "../components/scroll-top/ScrollTop";
-
-const CATEGORIES = [
-  { key: "news", title: "న్యూస్" },
-  { key: "politics", title: "రాజకీయాలు" },
-  { key: "movies", title: "చలనచిత్రాలు" },
-  { key: "ott", title: "ఓటిటి" },
-  { key: "gallery", title: "గ్యాలరీ" },
-  { key: "videos", title: "వీడియోలు" },
-  { key: "gossips", title: "గాసిప్స్" },
-  { key: "reviews", title: "సమీక్షలు" },
-  { key: "collections", title: "సేకరణలు" },
-  { key: "shows", title: "షోలు" },
-];
-
-const PLACEHOLDER_IMAGE =
-  "https://res.cloudinary.com/demmiusik/image/upload/v1729620426/post-default-pic_jbf1gl.png";
-const ERROR_IMAGE =
-  "https://via.placeholder.com/300x200?text=Image+Not+Available";
 
 const Search = () => {
   const { search } = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(search);
-  const initialQuery = queryParams.get("q") || "";
+  const q = queryParams.get("q") || "";
 
-  const [searchText, setSearchText] = useState(initialQuery);
-  const [teluguText, setTeluguText] = useState("");
-  const [hasSearched, setHasSearched] = useState(false);
+  const [searchText, setSearchText] = useState(q);
+  const [debouncedSearchText, setDebouncedSearchText] = useState(q);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const limit = 9;
 
-  // Each category: items, skip count, hasMore
+  const categories = useMemo(
+    () => [
+      { key: "news", title: "సమాచారం" },
+      { key: "politics", title: "రాజకీయాలు" },
+      { key: "movies", title: "చలనచిత్రాలు" },
+      { key: "ott", title: "ఓటిటి" },
+      { key: "gossips", title: "గాసిప్స్" },
+      { key: "reviews", title: "సమీక్షలు" },
+      { key: "collections", title: "సేకరణలు" },
+      { key: "shows", title: "షోస్" },
+      { key: "gallery", title: "గ్యాలరీ" },
+      { key: "videos", title: "వీడియోలు" },
+    ],
+    []
+  );
+
   const [searchData, setSearchData] = useState(() =>
-    CATEGORIES.reduce((acc, cat) => {
-      acc[cat.key] = { items: [], skip: 0, hasMore: true };
+    categories.reduce((acc, c) => {
+      acc[c.key] = { items: [], skip: 0, hasMore: true };
       return acc;
     }, {})
   );
 
-  const limit = 9;
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchText(searchText);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [searchText]);
 
-  // Convert input to Telugu
-  const convertToTelugu = useCallback(async (text) => {
-    if (!text.trim()) {
-      setTeluguText("");
-      return;
-    }
-    try {
-      const res = await fetch(
-        `https://inputtools.google.com/request?text=${encodeURIComponent(
-          text
-        )}&itc=te-t-i0-und`
-      );
-      const data = await res.json();
-      if (data?.[0] === "SUCCESS") {
-        const result = data[1][0][1];
-        const converted = Array.isArray(result) ? result[0] : result;
-        setTeluguText(String(converted));
-      } else {
-        setTeluguText(text); // fallback
-      }
-    } catch {
-      setTeluguText(text);
-    }
-  }, []);
-
-  // Search submit
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchText.trim()) {
-      toast.info("దయచేసి ఒక పదం ఇవ్వండి!");
-      return;
-    }
-    navigate(`/search?q=${encodeURIComponent(searchText)}`);
-    setHasSearched(true);
-    fetchAllCategories(teluguText);
-  };
-
-  // Reset + fetch all categories
-  const fetchAllCategories = useCallback((term) => {
-    setSearchData(
-      CATEGORIES.reduce((acc, cat) => {
-        acc[cat.key] = { items: [], skip: 0, hasMore: true };
-        return acc;
-      }, {})
-    );
-    CATEGORIES.forEach((cat) => fetchCategory(cat.key, term, 0));
-  }, []);
-
-  // Fetch one category with skip/limit
-  const fetchCategory = useCallback(
+  const fetchCategoryResults = useCallback(
     async (categoryKey, term, customSkip = 0) => {
-      if (!term.trim()) return;
       try {
         setIsLoading(true);
-        const res = await getSearchNewsTelugu(term, customSkip, limit);
+        const res = await getSearchNews(term, customSkip, limit);
         if (res?.status === "success") {
           const categoryResult = res.data[categoryKey];
           if (categoryResult) {
@@ -124,10 +76,11 @@ const Search = () => {
             });
           }
         } else {
-          toast.error(`"${categoryKey}" ఫలితాలు లోడ్ చేయలేకపోయాం`);
+          toast.error(res?.message || `Failed to fetch ${categoryKey}`);
         }
-      } catch (err) {
-        toast.error("ఫలితాలు తెచ్చే ప్రయత్నంలో లోపం జరిగింది!");
+      } catch (error) {
+        console.error(error);
+        toast.error(`Error fetching ${categoryKey}`);
       } finally {
         setIsLoading(false);
       }
@@ -135,77 +88,101 @@ const Search = () => {
     []
   );
 
-  // On mount or URL change
-  useEffect(() => {
-    if (initialQuery) {
-      setSearchText(initialQuery);
-      convertToTelugu(initialQuery);
-      setHasSearched(true);
-    }
-  }, [initialQuery, convertToTelugu]);
-
-  // When Telugu text changes
-  useEffect(() => {
-    if (teluguText.trim()) {
-      fetchAllCategories(teluguText);
-    }
-  }, [teluguText, fetchAllCategories]);
-
-  const renderPostItem = (item, category) => (
-    <Link
-      key={item._id}
-      to={
-        category === "gallery"
-          ? `/gallery/${item._id}`
-          : category === "videos"
-          ? `/videos/v/${item._id}`
-          : `/${category}/${item._id}`
-      }
-      className="single-category-post"
-    >
-      <div className="video-thumbnail-container">
-        <img
-          src={
-            category === "gallery"
-              ? item.galleryPics?.[0]?.url || ERROR_IMAGE
-              : item.mainUrl || ERROR_IMAGE
-          }
-          alt={item.title}
-          loading="lazy"
-          onError={(e) => {
-            e.currentTarget.src = ERROR_IMAGE;
-          }}
-        />
-        {category === "videos" && (
-          <div className="play-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </div>
-        )}
-      </div>
-      <div className="single-category-post-texts">
-        <span className="video-meta">
-          {moment(item.createdAt).format("Do MMM YYYY")}
-        </span>
-        <h3 className="video-title">{item.title}</h3>
-      </div>
-    </Link>
+  const fetchAllCategories = useCallback(
+    (term) => {
+      setSearchData(
+        categories.reduce((acc, c) => {
+          acc[c.key] = { items: [], skip: 0, hasMore: true };
+          return acc;
+        }, {})
+      );
+      categories.forEach((cat) => {
+        fetchCategoryResults(cat.key, term, 0);
+      });
+    },
+    [categories, fetchCategoryResults]
   );
 
-  const renderCategory = (cat) => {
-    const data = searchData[cat.key];
-    if (!data.items.length) return null;
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (!searchText.trim()) {
+      toast.info("Please enter a search term!");
+      return;
+    }
+    setHasSearched(true);
+    navigate(`/search?q=${encodeURIComponent(searchText)}`);
+    fetchAllCategories(searchText);
+  };
+
+  // useEffect(() => {
+  //   if (debouncedSearchText.trim()) {
+  //     setHasSearched(true);
+  //     fetchAllCategories(debouncedSearchText);
+  //   }
+  // }, [debouncedSearchText, fetchAllCategories]);
+
+  const renderPosts = (categoryKey, title) => {
+    const cat = searchData[categoryKey];
+    if (!cat.items.length) return null;
     return (
-      <div className="videos-category-container" key={cat.key}>
-        <SectionTitle title={cat.title} nav={`/${cat.key}`} />
+      <div className="videos-category-container" key={categoryKey}>
+        <SectionTitle title={title} />
         <div className="all-category-posts-container">
-          {data.items.map((item) => renderPostItem(item, cat.key))}
+          {cat.items.map((item) => {
+            // Telugu for display, English for SEO/link
+            const displayTitle = item.title?.te || item.title?.en || "Untitled";
+            const seoTitle = item.title?.en || displayTitle;
+
+            return (
+              <Link
+                key={item._id}
+                to={
+                  categoryKey === "gallery"
+                    ? `/gallery/${item.newsId}`
+                    : categoryKey === "videos"
+                    ? `/videos/v/${item.newsId}`
+                    : `/${item.category?.en || "news"}/${item.newsId}`
+                }
+                className="single-category-post"
+              >
+                <div className="video-thumbnail-container">
+                  <img
+                    src={
+                      categoryKey === "gallery"
+                        ? item.galleryPics?.[0]
+                        : item.mainUrl
+                    }
+                    alt={seoTitle}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/300x200?text=Image+Not+Available";
+                    }}
+                  />
+                  {categoryKey === "videos" && (
+                    <div className="play-icon">
+                      <svg viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+                <div className="single-category-post-texts">
+                  <span className="video-meta">
+                    {moment(item.createdAt).format("Do MMM YYYY")}
+                  </span>
+                  <h3 className="video-title">{displayTitle}</h3>
+                </div>
+              </Link>
+            );
+          })}
         </div>
-        {data.hasMore && (
+        {cat.hasMore && (
           <button
             className="load-more-btn"
-            onClick={() => fetchCategory(cat.key, teluguText, data.skip)}
+            onClick={() =>
+              fetchCategoryResults(categoryKey, debouncedSearchText, cat.skip)
+            }
           >
             {isLoading ? (
               <>
@@ -230,13 +207,15 @@ const Search = () => {
     (cat) => cat.items.length > 0
   );
 
-  document.title = `Search ${teluguText || searchText}`;
+  useEffect(() => {
+    document.title = `శోధించండి ${debouncedSearchText}`;
+  }, [debouncedSearchText]);
 
   return (
     <>
       <Navbar />
       <div className="search-page main-page">
-        <TabTitle title="తెలుగులో శోధించండి" />
+        <TabTitle title="శోధించండి" />
         <div className="search-page-container">
           <div className="search-container-top">
             <form
@@ -247,42 +226,44 @@ const Search = () => {
                 type="text"
                 placeholder="ఇక్కడ శోధించండి..."
                 value={searchText}
-                onChange={(e) => {
-                  setSearchText(e.target.value);
-                  convertToTelugu(e.target.value);
-                }}
+                onChange={(e) => setSearchText(e.target.value)}
+                aria-label="Search input"
               />
               <button
                 type="submit"
                 className="btn search-btn"
                 disabled={isLoading}
               >
-                {isLoading ? "శోధిస్తోంది..." : "Search"}
+                {isLoading ? "శోధిస్తున్నది..." : "శోధించండి"}
               </button>
             </form>
-            {teluguText && (
+            {debouncedSearchText && (
               <h1 className="search-text text-capital main-padding">
-                ఫలితాలు <span>{teluguText}</span> కోసం
+                <span>{debouncedSearchText}</span> ఫలితాలు
               </h1>
             )}
           </div>
 
-          {isLoading && !hasResults ? (
+          {isLoading &&
+          Object.values(searchData).every((c) => c.items.length === 0) ? (
             <div className="all-category-posts-container">
               {Array.from({ length: 9 }).map((_, i) => (
                 <div className="single-category-post box-shadow" key={i}>
-                  <img src={PLACEHOLDER_IMAGE} alt="Loading placeholder" />
+                  <img
+                    src="https://res.cloudinary.com/demmiusik/image/upload/v1729620426/post-default-pic_jbf1gl.png"
+                    alt="Loading placeholder"
+                  />
                 </div>
               ))}
             </div>
           ) : hasResults ? (
             <div className="all-videos-container">
-              {CATEGORIES.map((cat) => renderCategory(cat))}
+              {categories.map((cat) => renderPosts(cat.key, cat.title))}
             </div>
           ) : (
             hasSearched && (
               <p className="text-capital main-padding text-center">
-                "{teluguText || searchText}" కి ఫలితాలు దొరకలేదు
+                "{debouncedSearchText}"కి ఫలితాలు ఏవీ కనుగొనబడలేదు
               </p>
             )
           )}

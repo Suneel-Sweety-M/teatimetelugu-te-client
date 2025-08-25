@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SectionTitle from "../titles/SectionTitle";
 import { Link } from "react-router-dom";
-import { getCategoryNewsPosts } from "../../helper/apis";
+import { getFilteredNews } from "../../helper/apis";
 
 const CategoryTop = () => {
   const [moviesNews, setMoviesNews] = useState([]);
@@ -11,7 +11,7 @@ const CategoryTop = () => {
 
   const fetchNewsByCategory = async (category, setNews) => {
     try {
-      const res = await getCategoryNewsPosts(category, "", 1, 3);
+      const res = await getFilteredNews(category, "", "", "", 1, 3);
       if (res?.status === "success") {
         setNews(res?.news);
       }
@@ -36,20 +36,20 @@ const CategoryTop = () => {
   return (
     <div className="category-top-container">
       <section className="category-top-section">
-        <SectionTitle title={"Movies"} nav={"movies"} />
+        <SectionTitle title={"చలనచిత్రాలు"} nav={"movies"} />
         {!loading ? (
           <div className="category-top-grid">
             {moviesNews?.slice(0, 3)?.map((post) => (
               <Link
-                to={`/${post?.category}/${post?._id}`}
+                to={`/${post?.category?.en}/${post?.newsId}`}
                 key={post?._id}
                 className="category-top-card"
-                aria-label={`Read ${post?.title}`}
+                aria-label={`Read ${post?.title?.te}`}
               >
                 <div className="category-top-image-container">
                   <img
                     src={post?.mainUrl}
-                    alt={post?.title}
+                    alt={post?.title?.te}
                     loading="lazy"
                     className="category-top-image"
                   />
@@ -58,7 +58,7 @@ const CategoryTop = () => {
                   <span className="category-top-author">
                     {post?.postedBy?.fullName}
                   </span>
-                  <h3 className="category-top-title">{post?.title}</h3>
+                  <h3 className="category-top-title">{post?.title?.te}</h3>
                 </div>
               </Link>
             ))}
@@ -87,20 +87,20 @@ const CategoryTop = () => {
         )}
       </section>
       <section className="category-top-section">
-        <SectionTitle title={"Politics"} nav={"politics"} />
+        <SectionTitle title={"రాజకీయాలు"} nav={"politics"} />
         {!loading ? (
           <div className="category-top-grid">
             {politicalNews?.slice(0, 3)?.map((post) => (
               <Link
-                to={`/${post?.category}/${post?._id}`}
+                to={`/${post?.category?.en}/${post?.newsId}`}
                 key={post?._id}
                 className="category-top-card"
-                aria-label={`Read ${post?.title}`}
+                aria-label={`Read ${post?.title?.te}`}
               >
                 <div className="category-top-image-container">
                   <img
                     src={post?.mainUrl}
-                    alt={post?.title}
+                    alt={post?.title?.te}
                     loading="lazy"
                     className="category-top-image"
                   />
@@ -109,7 +109,7 @@ const CategoryTop = () => {
                   <span className="category-top-author">
                     {post?.postedBy?.fullName}
                   </span>
-                  <h3 className="category-top-title">{post?.title}</h3>
+                  <h3 className="category-top-title">{post?.title?.te}</h3>
                 </div>
               </Link>
             ))}
@@ -138,20 +138,20 @@ const CategoryTop = () => {
         )}
       </section>
       <section className="category-top-section">
-        <SectionTitle title={"Gossips"} nav={"gossips"} />
+        <SectionTitle title={"గాసిప్స్"} nav={"gossips"} />
         {!loading ? (
           <div className="category-top-grid">
             {gossipsNews?.slice(0, 3)?.map((post) => (
               <Link
-                to={`/${post?.category}/${post?._id}`}
+                to={`/${post?.category?.en}/${post?.newsId}`}
                 key={post?._id}
                 className="category-top-card"
-                aria-label={`Read ${post?.title}`}
+                aria-label={`Read ${post?.title?.te}`}
               >
                 <div className="category-top-image-container">
                   <img
                     src={post?.mainUrl}
-                    alt={post?.title}
+                    alt={post?.title?.te}
                     loading="lazy"
                     className="category-top-image"
                   />
@@ -160,7 +160,7 @@ const CategoryTop = () => {
                   <span className="category-top-author">
                     {post?.postedBy?.fullName}
                   </span>
-                  <h3 className="category-top-title">{post?.title}</h3>
+                  <h3 className="category-top-title">{post?.title?.te}</h3>
                 </div>
               </Link>
             ))}

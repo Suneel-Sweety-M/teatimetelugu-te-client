@@ -8,6 +8,7 @@ import NewsComments from "../components/single-news/NewsComments";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getNewsShortAd, getSingleNews } from "../helper/apis";
 import moment from "moment";
+import "moment/locale/te";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import ScrollTop from "../components/scroll-top/ScrollTop";
@@ -27,17 +28,12 @@ const SingleNews = () => {
   const [commentsCount, setCommentsCount] = useState(0);
 
   const getNews = useCallback(async () => {
-    if (!id || id.length !== 24) {
-      return navigate("/");
-    }
-
     try {
       setIsLoading(true);
       const res = await getSingleNews(id);
       if (res?.status === "success") {
         setNews(res?.news);
-
-        document.title = `${res?.news?.title}`;
+        document.title = `${res?.news?.title?.te}`;
         setSuggestedNews(res?.suggestedNews);
       } else {
         navigate("/");
@@ -51,6 +47,7 @@ const SingleNews = () => {
 
   useEffect(() => {
     getNews();
+    moment.locale("te");
   }, [getNews]);
 
   // const [newsLongAdImg, setNewsLongAdImg] = useState("");
@@ -94,11 +91,11 @@ const SingleNews = () => {
             <div className="single-news-duo-left">
               <div className="single-news-duo-left-top">
                 <h1 className="single-news-duo-left-top-title">
-                  {news?.title}
+                  {news?.title?.te}
                 </h1>
                 <span className="single-news-duo-left-top-auth-details">
                   <span className="sn-author">
-                    Writer: <b>{news?.postedBy?.fullName}</b>
+                    రచయిత: <b>{news?.postedBy?.fullName}</b>
                   </span>
                   <span className="sn-posted-date">
                     <i className="fa fa-calendar mr5"></i>
@@ -106,22 +103,20 @@ const SingleNews = () => {
                   </span>
                   <span className="sn-posted-date">
                     <i className="fa-regular fa-face-smile mr5"></i>
-                    {reactionsArray?.length} <span>Reactions</span>
+                    {reactionsArray?.length} <span>స్పందనలు</span>
                   </span>
                   <span className="sn-posted-date">
                     <i className="fa-regular fa-comments mr5"></i>
-                    {commentsCount} <span>Comments</span>
+                    {commentsCount} <span>వ్యాఖ్యలు</span>
                   </span>
-                  <ReadButton news={news} />
+                  {news?.newsAudio?.te && <ReadButton news={news} />}
                 </span>
                 <div className="single-news-content-container">
-                  {news?.subCategory !== "trailer" && (
-                    <img src={news?.mainUrl} alt={news?.title} />
-                  )}
+                  <img src={news?.mainUrl} alt={news?.title?.en} />
 
                   <div
                     className="single-news-description main-font"
-                    dangerouslySetInnerHTML={{ __html: news?.description }}
+                    dangerouslySetInnerHTML={{ __html: news?.description?.te }}
                   />
                 </div>
                 {news?.category === "reviews" && (
@@ -168,11 +163,11 @@ const SingleNews = () => {
             </div>
           )}
           <div className="single-news-duo-right">
-            {news?.tags?.length > 0 && (
+            {news?.tags?.te?.length > 0 && (
               <div className="single-news-tags">
-                <SectionTitle title={"Tags"} />
+                <SectionTitle title={"ట్యాగ్లు"} />
                 <div className="sn-all-tags">
-                  {news?.tags?.map((tag, index) => (
+                  {news?.tags?.te?.map((tag, index) => (
                     <Link
                       to={`/search?q=${tag}`}
                       className="sn-tag box-shadow"
@@ -185,7 +180,7 @@ const SingleNews = () => {
               </div>
             )}
             <div className="single-news-medias single-news-tags">
-              <SectionTitle title={"Follow Us"} />
+              <SectionTitle title={"మమ్మల్ని అనుసరించండి"} />
               <div className="sn-all-tags">
                 <a
                   href="https://www.facebook.com/profile.php?id=61572501587074"
@@ -196,7 +191,7 @@ const SingleNews = () => {
                     style={{ color: "#1093f5" }}
                     className="fa fa-facebook"
                   ></i>
-                  <span>Facebook</span>
+                  <span>ఫేస్‌బుక్</span>
                 </a>
                 <a
                   href="https://www.instagram.com/teatime_telugu"
@@ -204,7 +199,7 @@ const SingleNews = () => {
                   className="sn-social sn-tag box-shadow"
                 >
                   <i style={{ color: "red" }} className="fa fa-instagram"></i>
-                  <span>Instagram</span>
+                  <span>ఇన్‌స్టాగ్రామ్</span>
                 </a>
                 <a
                   href="https://www.youtube.com/@TeaTimeTelugu-s8b"
@@ -212,7 +207,7 @@ const SingleNews = () => {
                   className="sn-social sn-tag box-shadow"
                 >
                   <i style={{ color: "red" }} className="fa fa-youtube"></i>
-                  <span>YouTube</span>
+                  <span>యూట్యూబ్</span>
                 </a>
                 <a
                   href="https://x.com/TeaTimeTelugu"
@@ -220,7 +215,7 @@ const SingleNews = () => {
                   className="sn-social sn-tag box-shadow"
                 >
                   <i style={{ color: "#000000" }} className="fa fa-twitter"></i>
-                  <span>Twitter</span>
+                  <span>ట్విట్టర్</span>
                 </a>
               </div>
             </div>
@@ -240,7 +235,7 @@ const SingleNews = () => {
 
         {suggestedNews?.length > 0 && (
           <div className="latest-collection-container">
-            <SectionTitle title="Suggested Posts" />
+            <SectionTitle title="సూచించబడిన పోస్ట్‌లు" />
             {isLoading ? (
               <div className="latest-collection-grid">
                 {Array(9)
@@ -266,25 +261,25 @@ const SingleNews = () => {
               <div className="latest-collection-grid">
                 {suggestedNews?.slice(0, 9)?.map((collection) => (
                   <Link
-                    to={`/${collection?.category}/${collection?._id}`}
+                    to={`/${collection?.category?.en}/${collection?.newsId}`}
                     key={collection?._id}
                     className="latest-collection-card"
-                    aria-label={`View ${collection?.title}`}
+                    aria-label={`View ${collection?.title?.en}`}
                   >
                     <div className="latest-collection-image-container">
                       <img
                         src={collection?.mainUrl}
-                        alt={collection?.title}
+                        alt={collection?.title?.en}
                         loading="lazy"
                         className="latest-collection-image"
                       />
                     </div>
                     <div className="latest-collection-content">
                       <span className="latest-collection-category">
-                        {collection?.category}
+                        {collection?.category?.te}
                       </span>
                       <h3 className="latest-collection-title">
-                        {collection?.title}
+                        {collection?.title?.te}
                       </h3>
                     </div>
                   </Link>

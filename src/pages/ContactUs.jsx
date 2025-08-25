@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { contactUsEmail } from "../helper/apis";
 
 const ContactUs = () => {
-  document.title = "Contact Us";
+  document.title = "టీ టైమ్ తెలుగు - మమ్మల్ని సంప్రదించండి";
 
   const [data, setData] = useState({
     email: "",
@@ -43,14 +43,14 @@ const ContactUs = () => {
     <>
       <Navbar />
       <div className="contactus-page main-page padding-main">
-        <TabTitle title={"Contact Us"} />
+        <TabTitle title={"మమ్మల్ని సంప్రదించండి"} />
         <div className="contactus-page-container">
           <div className="contactus-section">
-            <h1>Contact Us</h1>
-            <p>Team Tea Time Telugu welcomes your feedback & suggestions.</p>
+            <h1>మమ్మల్ని సంప్రదించండి</h1>
+            <p>టీ టైమ్ తెలుగు బృందం మీ అభిప్రాయాలు మరియు సూచనలను స్వాగతిస్తుంది.</p>
             <div className="contactus-container">
               <div className="contactus-contact-info">
-                <h3 className="contactus-title">Let's get in touch</h3>
+                <h3 className="contactus-title">సంప్రదించండి </h3>
                 <p className="contactus-text"></p>
 
                 <div className="contactus-info">
@@ -74,7 +74,7 @@ const ContactUs = () => {
                 </div>
 
                 <div className="contactus-social-media">
-                  <p>Connect with us :</p>
+                  <p>సోషల్ మీడియా ఖాతాలు :</p>
                   <div className="contactus-social-icons">
                     <a
                       href="https://www.facebook.com/profile.php?id=61572501587074"
@@ -111,7 +111,7 @@ const ContactUs = () => {
                       value={data?.fullName}
                       onChange={handleChange}
                     />
-                    <span>Full Name</span>
+                    <span>పూర్తి పేరు</span>
                   </div>
                   <div className="contactus-input-container">
                     <input
@@ -121,7 +121,7 @@ const ContactUs = () => {
                       value={data?.email}
                       onChange={handleChange}
                     />
-                    <span>Email</span>
+                    <span>ఇ-మెయిల్</span>
                   </div>
                   <div className="contactus-input-container">
                     <input
@@ -131,7 +131,7 @@ const ContactUs = () => {
                       value={data?.subject}
                       onChange={handleChange}
                     />
-                    <span>Subject</span>
+                    <span>విషయం</span>
                   </div>
                   <div className="contactus-input-container textarea">
                     <textarea
@@ -140,11 +140,11 @@ const ContactUs = () => {
                       value={data?.message}
                       onChange={handleChange}
                     ></textarea>
-                    <span>Message</span>
+                    <span>సందేశం</span>
                   </div>
                   <input
                     type="submit"
-                    value="Send Message"
+                    value="సందేశం పంపండి"
                     className="contactus-btn"
                   />
                 </form>
@@ -152,7 +152,7 @@ const ContactUs = () => {
             </div>
 
             <div className="das-my20">
-              <h1>We Are Here</h1>
+              <h1>మేము ఇక్కడ ఉన్నాము</h1>
             </div>
             <div className="contactus-map-container das-my20">
               <iframe

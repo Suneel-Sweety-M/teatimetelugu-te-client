@@ -10,6 +10,8 @@ import moment from "moment";
 const SingleVideoContainer = () => {
   const { vid } = useParams();
   const [videoData, setVideoData] = useState({});
+  const [suggestedPosts, setSuggestedPosts] = useState([]);
+  const [similarPosts, setSimilarPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -18,8 +20,10 @@ const SingleVideoContainer = () => {
       try {
         const res = await getVideo(vid);
         if (res?.status === "success") {
-          setVideoData(res?.data);
-          document.title = `${res?.data?.video?.title}`;
+          setVideoData(res?.video);
+          document.title = `${res?.video?.title?.te}`;
+          setSuggestedPosts(res?.suggestedVideos);
+          setSimilarPosts(res?.similarVideos || []);
         } else {
           toast.error(res?.message);
         }
@@ -67,20 +71,20 @@ const SingleVideoContainer = () => {
       {!isLoading ? (
         <div className="single-video-container main-padding">
           <h1 className="p20">
-            <span style={{ color: "red", marginRight: "10px" }}>Video:</span>
-            {videoData?.video?.title}
+            <span style={{ color: "red", marginRight: "10px" }}>వీడియో:</span>
+            {videoData?.title?.te}
           </h1>
           <span className="single-news-duo-left-top-auth-details">
             <span className="sn-author">
-              Writer: <b>{videoData?.video?.postedBy?.fullName}</b>
+              రచయిత: <b>{videoData?.postedBy?.fullName}</b>
             </span>
             <span className="sn-posted-date">
               <i className="fa fa-calendar mr5"></i>
-              {moment(videoData?.video?.createdAt).format("hh:mm A, D MMMM YYYY")}
+              {moment(videoData?.createdAt).format("hh:mm A, D MMMM YYYY")}
             </span>
             {/* <span className="sn-posted-date">
               <i className="fa-regular fa-face-smile mr5"></i>
-              {videoData?.video?.reactions?.length} <span>Reactions</span>
+              {videoData?.reactions?.length} <span>Reactions</span>
             </span>
             <span className="sn-posted-date">
               <i className="fa-regular fa-comments mr5"></i>
@@ -89,24 +93,22 @@ const SingleVideoContainer = () => {
           </span>
           <div className="single-video-container-top">
             <div className="svct-video-container">
-              {videoData?.video && (
-                <iframe
-                  src={videoData?.video?.videoUrl}
-                  title="YouTube video player"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                ></iframe>
-              )}
+              <iframe
+                src={videoData?.videoUrl}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
             </div>
           </div>
-          {videoData?.similarPosts?.length > 0 && (
+          {similarPosts?.length > 0 && (
             <div className="video-related-videos">
-              <SectionTitle title={"Related Videos"} />
+              <SectionTitle title={"సంబంధిత వీడియోలు"} />
               <div className="all-category-posts-container">
-                {videoData?.similarPosts?.map((item, index) => (
+                {similarPosts?.map((item, index) => (
                   <Link
-                    to={`/videos/v/${item?._id}`}
+                    to={`/videos/v/${item?.newsId}`}
                     className="single-category-post"
                     aria-label={`Watch v`}
                     key={index}
@@ -127,7 +129,7 @@ const SingleVideoContainer = () => {
                       <span className="video-meta">
                         {moment(item?.createdAt).format("Do MMM YYYY")}
                       </span>
-                      <h3 className="video-title">{item?.title}</h3>
+                      <h3 className="video-title">{item?.title?.te}</h3>
                     </div>
                   </Link>
                 ))}
@@ -137,66 +139,29 @@ const SingleVideoContainer = () => {
           <Trailers />
           <div className="single-video-container-suggested">
             <div className="single-video-container-suggested-left">
-              {videoData?.suggestedPosts?.length > 0 && (
+              {suggestedPosts?.length > 0 && (
                 <div className="single-video-suggested-posts-container">
-                  <SectionTitle title={"Suggested Posts"} />
+                  <SectionTitle title={"సిఫార్సు చేసిన పోస్టులు"} />
                   <div className="sv-suggested-posts">
-                    {videoData?.suggestedPosts?.map((item, index) => (
+                    {suggestedPosts?.map((item, index) => (
                       <Link
-                        to={`/videos/v/${item?._id}`}
+                        to={`/videos/v/${item?.newsId}`}
                         className="sv-suggested-post"
                         key={index}
                       >
-                        <img src={item?.mainUrl} alt="yt-thumbnail" />
+                        <div className="video-thumbnail-container">
+                          <img src={item?.mainUrl} alt="yt-thumbnail" />
+                          <div className="play-icon">
+                            <svg viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
                         <h4>
                           <span style={{ color: "red" }} className="mr10">
-                            Video:
+                            వీడియో:
                           </span>
-                          {item?.title}
-                        </h4>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {videoData?.videoSongs?.length > 0 && (
-                <div className="single-video-suggested-posts-container">
-                  <SectionTitle title={"Video Songs"} />
-                  <div className="sv-suggested-posts">
-                    {videoData?.videoSongs?.map((item, index) => (
-                      <Link
-                        to={`/videos/v/${item?._id}`}
-                        className="sv-suggested-post"
-                        key={index}
-                      >
-                        <img src={item?.mainUrl} alt="yt-thumbnail" />
-                        <h4>
-                          <span style={{ color: "red" }} className="mr10">
-                            Video:
-                          </span>
-                          {item?.title}
-                        </h4>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {videoData?.relatedPosts?.length > 0 && (
-                <div className="single-video-suggested-posts-container">
-                  <SectionTitle title={"Related Posts"} />
-                  <div className="sv-suggested-posts">
-                    {videoData?.relatedPosts?.map((item, index) => (
-                      <Link
-                        to={`/videos/v/${item?._id}`}
-                        className="sv-suggested-post"
-                        key={index}
-                      >
-                        <img src={item?.mainUrl} alt="yt-thumbnail" />
-                        <h4>
-                          <span style={{ color: "red" }} className="mr10">
-                            Video:
-                          </span>
-                          {item?.title}
+                          {item?.title?.te}
                         </h4>
                       </Link>
                     ))}
@@ -206,7 +171,7 @@ const SingleVideoContainer = () => {
             </div>
             <div className="single-video-container-suggested-right">
               <div className="single-news-medias single-news-tags">
-                <SectionTitle title={"Follow Us"} />
+                <SectionTitle title={"మమ్మల్ని అనుసరించండి"} />
                 <div className="sn-all-tags">
                   <a
                     href="https://www.facebook.com/profile.php?id=61572501587074"
@@ -217,7 +182,7 @@ const SingleVideoContainer = () => {
                       style={{ color: "#1093f5" }}
                       className="fa fa-facebook"
                     ></i>
-                    <span>Facebook</span>
+                    <span>ఫేస్‌బుక్</span>
                   </a>
                   <a
                     href="https://www.instagram.com/teatime_telugu"
@@ -225,7 +190,7 @@ const SingleVideoContainer = () => {
                     className="sn-social sn-tag box-shadow"
                   >
                     <i style={{ color: "red" }} className="fa fa-instagram"></i>
-                    <span>Instagram</span>
+                    <span>ఇన్‌స్టాగ్రామ్</span>
                   </a>
                   <a
                     href="https://www.youtube.com/@TeaTimeTelugu-s8b"
@@ -233,7 +198,7 @@ const SingleVideoContainer = () => {
                     className="sn-social sn-tag box-shadow"
                   >
                     <i style={{ color: "red" }} className="fa fa-youtube"></i>
-                    <span>YouTube</span>
+                    <span>యూట్యూబ్</span>
                   </a>
                   <a
                     href="https://x.com/TeaTimeTelugu"
@@ -244,7 +209,7 @@ const SingleVideoContainer = () => {
                       style={{ color: "#000000" }}
                       className="fa fa-twitter"
                     ></i>
-                    <span>Twitter</span>
+                    <span>ట్విటర్</span>
                   </a>
                 </div>
               </div>

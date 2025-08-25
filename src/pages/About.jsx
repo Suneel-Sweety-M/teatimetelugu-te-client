@@ -4,46 +4,44 @@ import Footer from "../components/footer/Footer";
 import TabTitle from "../components/titles/TabTitle";
 
 const About = () => {
-  document.title = "About Us";
+  document.title = "టీ టైమ్ తెలుగు - మా గురించి";
   return (
     <>
       <Navbar />
       <div className="about-page main-page padding-page">
-        <TabTitle title={"About Us"} />
+        <TabTitle title={"మా గురించి"} />
         <div className="aboutus-container">
           <div className="aboutus-section p20">
-            <h1>Tea Time Telugu</h1>
+            <h1>టీ టైమ్ తెలుగు</h1>
             <div className="aboutus-flex">
               <div>
                 <p>
-                  Tea Time Telugu, established in December 2024, began as a
-                  dedicated platform for news and entertainment tailored to the
-                  Telugu-speaking audience. Over the years, it has transformed
-                  into a go-to destination for round-the-clock updates, becoming
-                  a trusted name for entertainment news and insights.
+                  తెలుగు మాట్లాడే ప్రేక్షకుల కోసం వార్తలు మరియు వినోదాన్ని
+                  ప్రత్యేకంగా అందించేందుకు ఈ వేదిక ప్రారంభమైంది. కాలక్రమేణా ఇది
+                  24 గంటల తాజా అప్‌డేట్స్ అందించే నమ్మకమైన వినోద వార్తల
+                  గమ్యస్థానంగా మారింది.
                 </p>
 
                 <p>
-                  The platform covers a diverse range of content that keeps
-                  readers informed and entertained. From breaking news and
-                  trending topics to in-depth film reviews and award-season
-                  highlights, Tea Time Telugu caters to every reader’s
-                  interests. It also features exclusive celebrity interviews,
-                  updates on OTT releases, analyses of political and social
-                  topics, and vibrant photo galleries capturing film events and
-                  candid moments of stars. With regular updates in the regional
-                  language Telugu, it connects deeply with its audience while
-                  ensuring accessibility.
+                  ఈ వేదిక పాఠకులను సమాచారంతో పాటు వినోదాన్ని కలిపి ఉంచే విభిన్న
+                  కంటెంట్‌ను అందిస్తుంది. బ్రేకింగ్ న్యూస్, ట్రెండింగ్ టాపిక్స్
+                  నుండి లోతైన సినిమా సమీక్షలు, అవార్డు సీజన్ ముఖ్యాంశాలు వరకు—టీ
+                  టైమ్ తెలుగు ప్రతి పాఠకుడి ఆసక్తిని తీర్చుతుంది. అదనంగా
+                  ప్రత్యేక సెలబ్రిటీ ఇంటర్వ్యూలు, OTT రిలీజ్ అప్‌డేట్స్,
+                  రాజకీయ-సామాజిక విశ్లేషణలు, సినిమా ఈవెంట్స్ మరియు స్టార్‌ల
+                  మనోహర క్షణాలను పట్టిన ఫోటో గ్యాలరీలు కూడా అందిస్తుంది. తెలుగు
+                  భాషలో క్రమం తప్పకుండా అప్‌డేట్స్ ఇస్తూ, ఇది తన ప్రేక్షకులతో
+                  మరింత దగ్గరగా అనుసంధానం అవుతుంది.
                 </p>
                 <p>
-                  Behind the scenes, a passionate team of writers and technical
-                  experts works tirelessly to deliver engaging, high-quality
-                  stories that resonate with readers. Tea Time Telugu is more
-                  than just a news site—it’s a platform that informs, inspires,
-                  and entertains its growing audience every day.
+                  పరిశీలనలో లేని వెనుకభాగంలో, రైటర్లు మరియు టెక్నికల్ నిపుణుల
+                  బృందం పాఠకులకు నచ్చేలా ఆసక్తికరమైన, నాణ్యమైన కథనాలను
+                  అందించేందుకు నిరంతరం శ్రమిస్తుంది. టీ టైమ్ తెలుగు కేవలం ఒక
+                  న్యూస్ సైట్ మాత్రమే కాదు—ప్రతి రోజు తన పెరుగుతున్న
+                  ప్రేక్షకులను సమాచారం, ప్రేరణ మరియు వినోదంతో కలిపే వేదిక.
                 </p>
-                <p>Happy reading!</p>
-                <p>— Team Tea Time Telugu</p>
+                <p>హ్యాపీ రీడింగ్!</p>
+                <p>— టీ టైమ్ తెలుగు బృందం</p>
               </div>
               <img src="/assets/new-ttt-logo.jpg" alt="" />
             </div>

@@ -3,7 +3,7 @@ import "../components/gallery/gallery.css";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/footer/Footer";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { loadGalleryPosts } from "../helper/apis";
+import { getFilteredGallery } from "../helper/apis";
 import { toast } from "react-toastify";
 import ScrollTop from "../components/scroll-top/ScrollTop";
 
@@ -24,10 +24,16 @@ const Gallery = () => {
     document.title = "టీ టైం తెలుగు - గ్యాలరీ";
     setIsLoading(true);
     try {
-      const res = await loadGalleryPosts(currentPage, POSTS_PER_PAGE);
+      const res = await getFilteredGallery(
+        "",
+        "",
+        "",
+        currentPage,
+        POSTS_PER_PAGE
+      );
       if (res?.status === "success") {
         setGallery(res?.gallery || []);
-        setTotalPages(Math.ceil((res?.total || 0) / POSTS_PER_PAGE));
+        setTotalPages(res?.pagination?.totalPages || 1);
       } else {
         toast.error(res?.message || "Something went wrong!");
       }
@@ -68,9 +74,11 @@ const Gallery = () => {
             <i className="fa fa-angle-left"></i>
           </span>
         )}
-        <span className="currentPage-text">
-          Page {currentPage} of {totalPages}
-        </span>
+        {totalPages > 1 && (
+          <span className="currentPage-text">
+            Page {currentPage} of {totalPages}
+          </span>
+        )}
         {totalPages > 1 && (
           <span onClick={handleNext}>
             <i className="fa fa-angle-right"></i>
@@ -93,22 +101,22 @@ const Gallery = () => {
             {gallery.length > 0 ? (
               gallery.map((item) => (
                 <Link
-                  to={`/gallery/${item?._id}`}
+                  to={`/gallery/${item?.newsId}`}
                   className="gallery-card"
                   key={item?._id}
-                  aria-label={`View ${item?.name} gallery`}
+                  aria-label={`View ${item?.name?.en} gallery`}
                 >
                   <div className="gallery-image-container">
                     <img
                       src={
-                        item?.galleryPics[0]?.url ||
+                        item?.galleryPics[0] ||
                         "https://res.cloudinary.com/demmiusik/image/upload/v1729620719/EET_cyxysf.png"
                       }
-                      alt={item?.name}
+                      alt={item?.name?.en}
                       loading="lazy"
                     />
                   </div>
-                  <span className="gallery-name">{item?.name}</span>
+                  <span className="gallery-name">{item?.title?.te}</span>
                 </Link>
               ))
             ) : (

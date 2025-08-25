@@ -52,7 +52,7 @@ const LatestStories = () => {
         </div>
       ) : (
         <div className="latest-stories-container">
-          <SectionTitle title={"Latest Stories"} />
+          <SectionTitle title={"తాజా కథనాలు"} />
           <div className="latest-stories-section">
             {news?.map((post, index) => (
               <article
@@ -60,7 +60,7 @@ const LatestStories = () => {
                 className="top-nine-post latest-stories-post"
               >
                 <Link
-                  to={`/${post?.category}/${post?._id}`}
+                  to={`/${post?.category?.en}/${post?.newsId}`}
                   className="top-nine-link"
                 >
                   <figure className="post-image-container">
@@ -69,14 +69,14 @@ const LatestStories = () => {
                         post?.mainUrl ||
                         "https://res.cloudinary.com/demmiusik/image/upload/v1729620426/post-default-pic_jbf1gl.png"
                       }
-                      alt={post?.title}
+                      alt={post?.title?.te}
                       loading="lazy"
                       className="post-image"
                     />
                   </figure>
                   <div className="post-content">
-                    <span className="post-category">{post?.category}</span>
-                    <h3 className="post-title">{post?.title}</h3>
+                    <span className="post-category">{post?.category?.te}</span>
+                    <h3 className="post-title">{post?.title?.te}</h3>
                   </div>
                 </Link>
               </article>

@@ -56,7 +56,7 @@ const Category = () => {
     } else if (category === "gossips") {
       setTitle("గాసిప్స్");
     } else if (category === "ott") {
-      setTitle("OTT వార్తలు");
+      setTitle("ఓటీటీ వార్తలు");
     } else if (category === "gallery") {
       setTitle("గ్యాలరీ");
     } else if (category === "videos") {

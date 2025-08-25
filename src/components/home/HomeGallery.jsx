@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import SectionTitle from "../titles/SectionTitle";
 import { Link } from "react-router-dom";
-import { loadGalleryPosts } from "../../helper/apis";
+import { getFilteredGallery } from "../../helper/apis";
 
 const HomeGallery = () => {
-  const [homeGalleryNews, setHomeGalleryNews] = useState([]); 
+  const [homeGalleryNews, setHomeGalleryNews] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const allHomeGalleryPosts = async () => {
     try {
-      const res = await loadGalleryPosts(1, 5);
+      const res = await getFilteredGallery("", "", "", 1, 5);
       if (res?.status === "success") {
         setHomeGalleryNews(res?.gallery);
       }
@@ -26,7 +26,7 @@ const HomeGallery = () => {
 
   return (
     <section className="gallery-container">
-      <SectionTitle title="Gallery" nav="gallery" />
+      <SectionTitle title="గ్యాలరీ" nav="gallery" />
       {loading ? (
         <div className="gallery-grid">
           {Array(5)
@@ -50,25 +50,25 @@ const HomeGallery = () => {
         <div className="gallery-grid">
           {homeGalleryNews?.slice(0, 5)?.map((item) => (
             <Link
-              to={`/gallery/${item?._id}`}
+              to={`/gallery/${item?.newsId}`}
               key={item?._id}
               className="gallery-card"
-              aria-label={`View ${item?.name} gallery`}
+              aria-label={`View ${item?.name?.en} gallery`}
             >
               <div className="card-image-container">
                 <img
                   src={
-                    item?.galleryPics[0]?.url ||
+                    item?.galleryPics[0] ||
                     "https://res.cloudinary.com/demmiusik/image/upload/v1729620719/EET_cyxysf.png"
                   }
-                  alt={item?.name}
+                  alt={item?.name?.en}
                   loading="lazy"
                   className="card-image"
                 />
               </div>
               <div className="card-overlay">
-                <span className="card-category">{item?.category}</span>
-                <h3 className="card-title">{item?.name}</h3>
+                <span className="card-category">{item?.category?.te}</span>
+                <h3 className="card-title">{item?.name?.te}</h3>
               </div>
             </Link>
           ))}

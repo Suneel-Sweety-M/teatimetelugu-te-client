@@ -66,25 +66,26 @@ const AdWithUs = () => {
       console.log(error);
     }
   };
-  
-  document.title = "Advertise With Us";
+
+  document.title = "మాతో ప్రకటనలు చేయండి";
 
   return (
     <>
       <Navbar />
       <div className="adwithus-page main-page padding-page">
-        <TabTitle title={"Advertise with Us"} />
+        <TabTitle title={"మాతో ప్రకటనలు చేయండి"} />
         <div className="adwithus-container">
           <div className="adwithus-section">
             <p className="adwithus-intro">
-              Select where your AD wants to be placed. We have different ad
-              sizes for different pages. Select the page and ad size you want to
-              place and describe your ad in the form below. We will get back to
-              you as soon as possible.
+              మీ ప్రకటనను ఎక్కడ ఉంచాలనుకుంటున్నారో ఎంచుకోండి. మా వద్ద విభిన్న
+              పేజీలకు విభిన్న పరిమాణాల్లో ప్రకటన స్థలాలు ఉన్నాయి. మీరు ప్రకటన
+              ఉంచదలచిన పేజీ మరియు ప్రకటన పరిమాణం ఎంచుకుని, కింది ఫారమ్‌లో మీ
+              ప్రకటన వివరాలను నమోదు చేయండి. మేము వీలైనంత త్వరగా మిమ్మల్ని
+              సంప్రదిస్తాము.
             </p>
 
             <div className="adwithus-section-block">
-              <h2>Select Page</h2>
+              <h2>పేజీని ఎంచుకోండి</h2>
               <div className="adwithus-ad-pages">
                 {pageOptions.map((page) => (
                   <button
@@ -104,7 +105,7 @@ const AdWithUs = () => {
             </div>
 
             <div className="adwithus-section-block">
-              <h2>Select Ad Size</h2>
+              <h2>ప్రకటన పరిమాణాన్ని ఎంచుకోండి</h2>
               <div className="adwithus-ad-templates">
                 {adSizeOptions[activePage].map((size) => (
                   <button
@@ -121,11 +122,11 @@ const AdWithUs = () => {
             </div>
 
             <div className="adwithus-section-block">
-              <h2>Contact Information</h2>
+              <h2>సంప్రదింపు సమాచారం</h2>
               <div className="adwithus-contact-form">
                 <form onSubmit={handleSubmit}>
                   <div className="form-group">
-                    <label htmlFor="fullName">Full Name</label>
+                    <label htmlFor="fullName">పూర్తి పేరు</label>
                     <input
                       type="text"
                       id="fullName"
@@ -137,7 +138,7 @@ const AdWithUs = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email">ఇమెయిల్</label>
                     <input
                       type="email"
                       id="email"
@@ -149,7 +150,7 @@ const AdWithUs = () => {
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="subject">Subject</label>
+                    <label htmlFor="subject">విషయం</label>
                     <input
                       type="text"
                       id="subject"
@@ -161,7 +162,7 @@ const AdWithUs = () => {
                     />
                   </div>
                   <div className="form-group textarea">
-                    <label htmlFor="message">Message</label>
+                    <label htmlFor="message">సందేశం</label>
                     <textarea
                       id="message"
                       name="message"
@@ -173,7 +174,7 @@ const AdWithUs = () => {
                     ></textarea>
                   </div>
                   <button type="submit" className="submit-btn">
-                    Send Message
+                    సందేశం పంపండి
                   </button>
                 </form>
               </div>

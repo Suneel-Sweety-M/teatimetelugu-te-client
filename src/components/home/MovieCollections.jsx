@@ -27,7 +27,7 @@ const MovieCollections = () => {
   return (
     <>
       <div className="movie-schedules-container">
-        <SectionTitle title={"Movie Collections"} />
+        <SectionTitle title={"సినిమా సేకరణలు"} />
         <div className="movie-schedules-section">
           <div className="current-schedules">
             <span
@@ -40,7 +40,7 @@ const MovieCollections = () => {
               onClick={() => setCollectionsCategory("1st-day-ap&ts")}
               className="ms-text"
             >
-              1st day TS&AP
+              1వ రోజు AP&TS
             </span>
             <span
               style={{
@@ -52,7 +52,7 @@ const MovieCollections = () => {
               onClick={() => setCollectionsCategory("1st-day-ww")}
               className="ms-text"
             >
-              1st day WW
+              1వ రోజు WW
             </span>
             <span
               style={{
@@ -64,7 +64,7 @@ const MovieCollections = () => {
               onClick={() => setCollectionsCategory("closing-ww")}
               className="ms-text"
             >
-              Closing WW
+              1వ రోజు WW 
             </span>
           </div>
           <div className="schedules-list">
@@ -73,13 +73,13 @@ const MovieCollections = () => {
                 style={{ color: "red", fontWeight: "500" }}
                 className="ms-text"
               >
-                Name
-              </span> 
+                పేరు
+              </span>
               <span
                 style={{ color: "red", fontWeight: "500" }}
                 className="ms-text"
               >
-                Collections
+                సేకరణలు
               </span>
             </div>
 
@@ -91,8 +91,8 @@ const MovieCollections = () => {
                 display: collectionsCategory !== item?.category && "none",
               }}
             >
-              <span className="text-center ms-text">{item?.movie}</span>
-              <span className="ms-text">₹ {item?.amount}</span>
+              <span className="text-center ms-text">{item?.movie?.te}</span>
+              <span className="ms-text">₹ {item?.amount?.te}</span>
             </div>
           ))}
           </div>

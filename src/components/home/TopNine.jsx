@@ -30,7 +30,7 @@ const TopNine = () => {
 
   return (
     <section className="top-nine-section">
-      <SectionTitle title="Top 9" />
+      <SectionTitle title="టాప్ 9 వార్తలు" />
       {error && <div className="error-message">{error}</div>}
       {loading ? (
         <div className="top-nine-container">
@@ -59,21 +59,21 @@ const TopNine = () => {
           {topNineNews.map((post, index) => (
             <article key={post?._id} className="top-nine-post">
               <Link
-                to={`/${post?.category}/${post?._id}`}
+                to={`/${post?.category?.en}/${post?.newsId}`}
                 className="top-nine-link"
               >
                 <div className="post-rank">{index + 1}</div>
                 <figure className="post-image-container">
                   <img
                     src={post?.mainUrl}
-                    alt={post?.title}
+                    alt={post?.title?.te}
                     loading="lazy"
                     className="post-image"
                   />
                 </figure>
                 <div className="post-content">
-                  <span className="post-category">{post?.category}</span>
-                  <h3 className="post-title">{post?.title}</h3>
+                  <span className="post-category">{post?.category?.te}</span>
+                  <h3 className="post-title">{post?.title?.te}</h3>
                 </div>
               </Link>
             </article>

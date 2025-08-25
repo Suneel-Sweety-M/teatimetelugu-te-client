@@ -72,7 +72,7 @@ const ScrollNews = () => {
 
   return (
     <div className="scroll-news-container">
-      <SectionTitle title="Today Hot Topics" />
+      <SectionTitle title="ఈరోజు హాట్ టాపిక్స్" />
       {!isLoading && (
         <div className="scroll-news-wrapper">
           <button className="scroll-news-button left" onClick={goToPrev}>
@@ -83,10 +83,10 @@ const ScrollNews = () => {
               <Link
                 key={index}
                 className={`scroll-news-item ${getItemPosition(index)}`}
-                to={`/${item?.category}/${item?._id}`}
+                to={`/${item?.category?.en}/${item?.newsId}`}
               >
-                <img src={item?.mainUrl} alt={item?.title} />
-                <div className="scroll-news-title">{item?.title}</div>
+                <img src={item?.mainUrl} alt={item?.title?.te} />
+                <div className="scroll-news-title">{item?.title?.te}</div>
               </Link>
             ))}
           </div>

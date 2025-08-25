@@ -153,22 +153,22 @@ const BreakingNews = () => {
           {breakingNews.map((post) => (
             <article key={post?._id} className="breaking-news-post">
               <Link
-                to={`/${post?.category}/${post?._id}`}
+                to={`/${post?.category?.en}/${post?.newsId}`}
                 className="breaking-news-link"
               >
                 <figure className="breaking-news-image-container">
                   <img
                     src={post?.mainUrl}
-                    alt={post?.title}
+                    alt={post?.title?.te}
                     loading="lazy"
                     className="breaking-news-image"
                   />
                 </figure>
                 <div className="breaking-news-content">
                   <span className="breaking-news-category">
-                    {/* {post?.category} */} Breaking News
+                    {/* {post?.category} */} బ్రేకింగ్ న్యూస్
                   </span>
-                  <h3 className="breaking-news-title">{post?.title}</h3>
+                  <h3 className="breaking-news-title">{post?.title?.te}</h3>
                 </div>
               </Link>
             </article>

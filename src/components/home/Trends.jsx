@@ -29,7 +29,7 @@ const Trends = () => {
   }, []);
   return (
     <div className="trends-container">
-      <SectionTitle title="Trends" />
+      <SectionTitle title="ట్రెండింగ్ వార్తలు" />
       {loading ? (
         <div className="trends-section">
           <div className="trends-left">
@@ -71,7 +71,7 @@ const Trends = () => {
         <div className="trends-section">
           <div className="trends-left">
             <Link
-              to={`/${mainTrends?.category}/${mainTrends?._id}`}
+              to={`/${mainTrends?.category?.en}/${mainTrends?.newsId}`}
               className="trends-post cp"
             >
               <img
@@ -86,7 +86,7 @@ const Trends = () => {
                   {mainTrends?.postedBy?.fullName} -{" "}
                   {moment(mainTrends?.createdAt).format("MMM DD, YYYY")}
                 </span>
-                <h3 className="trends-title ">{mainTrends?.title}</h3>
+                <h3 className="trends-title ">{mainTrends?.title?.te}</h3>
                 {/* <span
                   className="trends-desc dynamic-desc"
                   dangerouslySetInnerHTML={{
@@ -99,7 +99,7 @@ const Trends = () => {
           <div className="trends-right">
             {otherTrends.map((item, index) => (
               <Link
-                to={`/${item?.category}/${item?._id}`}
+                to={`/${item?.category?.en}/${item?.newsId}`}
                 className="trends-post cp"
                 key={index}
               >
@@ -112,10 +112,10 @@ const Trends = () => {
                 />
                 <div className="trends-texts">
                   <span className="trends-category">
-                    {item?.category} /{" "}
+                    {item?.category?.te} /{" "}
                     {moment(item?.createdAt).format("MMM DD, YYYY")}
                   </span>
-                  <h3 className="trends-title ">{item?.title}</h3>
+                  <h3 className="trends-title ">{item?.title?.te}</h3>
                   {/* <span
                     className="trends-desc dynamic-desc"
                     dangerouslySetInnerHTML={{

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Discover = () => {
   return (
     <div className="discover-container page-main-container">
-      <SectionTitle title={"Discover"} />
+      <SectionTitle title={"కనుగొనండి"} />
       <div className="discover-section">
         <Link to="/movies" className="discover-card">
           <img

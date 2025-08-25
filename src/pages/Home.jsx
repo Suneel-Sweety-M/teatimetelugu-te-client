@@ -87,7 +87,7 @@ const Home = () => {
   }, []);
 
   document.title =
-    "టీ టైం తెలుగు - Telugu News on AP and TS Politics, Movies and Gossips";
+    "టీ టైం తెలుగు - AP మరియు TS రాజకీయాలు, సినిమాలు మరియు గాసిప్‌లపై తెలుగు వార్తలు";
   return (
     <>
       <ScrollTop />

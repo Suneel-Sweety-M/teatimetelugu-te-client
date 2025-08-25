@@ -26,7 +26,7 @@ const MovieSchedules = () => {
   return (
     <>
       <div className="movie-schedules-container">
-        <SectionTitle title={"Movie Schedules"} />
+        <SectionTitle title={"సినిమా విడుదలలు"} />
         <div className="movie-schedules-section">
           <div className="current-schedules">
             <span
@@ -38,7 +38,7 @@ const MovieSchedules = () => {
               onClick={() => setReleaseCategory("movie")}
               className="ms-text"
             >
-              Movies
+              సినిమా
             </span>
             <span
               style={{
@@ -48,7 +48,7 @@ const MovieSchedules = () => {
               onClick={() => setReleaseCategory("ott")}
               className="ms-text"
             >
-              OTT
+              ఓటీటీ
             </span>
           </div>
           <div className="schedules-list">
@@ -57,13 +57,13 @@ const MovieSchedules = () => {
                 style={{ color: "red", fontWeight: "500" }}
                 className="ms-text"
               >
-                Name
+                పేరు
               </span>
               <span
                 style={{ color: "red", fontWeight: "500" }}
                 className="ms-text"
               >
-                Release Date
+                విడుదల తేదీ
               </span>
             </div>
 
@@ -75,8 +75,8 @@ const MovieSchedules = () => {
                   display: releaseCategory !== item?.category && "none",
                 }}
               >
-                <span className="text-center ms-text">{item?.movie}</span>
-                <span className="ms-text">{item?.date} </span>
+                <span className="text-center ms-text">{item?.movie?.te}</span>
+                <span className="ms-text">{item?.date?.te} </span>
               </div>
             ))}
           </div>

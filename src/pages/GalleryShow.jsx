@@ -7,9 +7,11 @@ import NewsComments from "../components/single-news/NewsComments";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getNewsShortAd, getSingleGallery } from "../helper/apis";
 import moment from "moment";
+import "moment/locale/te";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import ScrollTop from "../components/scroll-top/ScrollTop";
+import ReadButton from "../components/single-news/ReadButton";
 
 const GalleryShow = () => {
   const { id } = useParams();
@@ -57,8 +59,8 @@ const GalleryShow = () => {
       const res = await getSingleGallery(id);
       if (res?.status === "success") {
         setGallery(res?.gallery);
-        document.title = `${res?.gallery?.title}`;
-        setSuggestedPosts(res?.suggestedPosts);
+        document.title = `${res?.gallery?.title?.te}`;
+        setSuggestedPosts(res?.suggestedGallery);
       } else {
         navigate("/gallery");
       }
@@ -71,6 +73,7 @@ const GalleryShow = () => {
 
   useEffect(() => {
     getPictures();
+    moment.locale("te");
   }, [getPictures]);
   // const [newsLongAdImg, setNewsLongAdImg] = useState("");
   // const [newsLongAdLink, setNewsLongAdLink] = useState("");
@@ -112,11 +115,11 @@ const GalleryShow = () => {
             <div className="single-news-duo-left">
               <div className="single-news-duo-left-top">
                 <h1 className="single-news-duo-left-top-title">
-                  {gallery?.title}
+                  {gallery?.title?.te}
                 </h1>
                 <span className="single-news-duo-left-top-auth-details">
                   <span className="sn-author">
-                    By <b>{gallery?.postedBy?.fullName}</b>
+                    రచయిత: <b>{gallery?.postedBy?.fullName}</b>
                   </span>
                   <span className="sn-posted-date">
                     <i className="fa fa-calendar mr5"></i>
@@ -125,27 +128,30 @@ const GalleryShow = () => {
                   <span className="sn-posted-date">
                     <i className="fa-regular fa-face-smile mr5"></i>
                     {reactionsArray?.length}
-                    <span> Reactions</span>
+                    <span> స్పందనలు</span>
                   </span>
                   <span className="sn-posted-date">
                     <i className="fa-regular fa-comments mr5"></i>
                     {commentsCount || gallery?.comments?.length || 0}
-                    <span> Comments</span>
+                    <span> వ్యాఖ్యలు</span>
                   </span>
+                  {gallery?.newsAudio?.te && <ReadButton news={gallery} />}
                 </span>
                 <div className="single-news-content-container">
                   {gallery?.galleryPics?.length > 0 && (
-                    <img src={gallery?.galleryPics[0]?.url} alt="pic" />
+                    <img src={gallery?.galleryPics[0]} alt="pic" />
                   )}
                   <div
                     className="single-news-description main-font"
-                    dangerouslySetInnerHTML={{ __html: gallery?.description }}
+                    dangerouslySetInnerHTML={{
+                      __html: gallery?.description?.te,
+                    }}
                   />
                   <div className="all-pics-grid">
                     {gallery?.galleryPics?.map((pic, index) => (
                       <img
                         key={index}
-                        src={pic?.url}
+                        src={pic}
                         alt=""
                         className="grid-pic"
                         onClick={() => {
@@ -185,42 +191,18 @@ const GalleryShow = () => {
           )}
           <div className="single-news-duo-right">
             <div className="single-news-medias single-news-tags">
-              <SectionTitle title={"Tags"} />
+              <SectionTitle title={"ట్యాగ్లు"} />
               <div className="sn-all-tags">
                 <Link
-                  to={`/search?q=${gallery?.name}`}
+                  to={`/search?q=${gallery?.name?.te}`}
                   className="sn-tag box-shadow"
                 >
-                  {gallery?.name}
-                </Link>
-                <Link to={`/search?q=Tollywood`} className="sn-tag box-shadow">
-                  Tollywood
-                </Link>
-                <Link to={`/search?q=NTR`} className="sn-tag box-shadow">
-                  NTR
-                </Link>
-                <Link to={`/search?q=Samanta`} className="sn-tag box-shadow">
-                  Samanta
-                </Link>
-                <Link
-                  to={`/search?q=Pooja Hegde`}
-                  className="sn-tag box-shadow"
-                >
-                  Pooja Hegde
-                </Link>
-                <Link to={`/search?q=Rajamouli`} className="sn-tag box-shadow">
-                  Rajamouli
-                </Link>
-                <Link
-                  to={`/search?q=Mahesh Babu`}
-                  className="sn-tag box-shadow"
-                >
-                  Mahesh Babu
+                  {gallery?.name?.te}
                 </Link>
               </div>
             </div>
             <div className="single-news-medias single-news-tags">
-              <SectionTitle title={"Follow Us"} />
+              <SectionTitle title={"మమ్మల్ని అనుసరించండి"} />
               <div className="sn-all-tags">
                 <a
                   href="https://www.facebook.com/profile.php?id=61572501587074"
@@ -231,7 +213,7 @@ const GalleryShow = () => {
                     style={{ color: "#1093f5" }}
                     className="fa fa-facebook"
                   ></i>
-                  <span>Facebook</span>
+                  <span>ఫేస్‌బుక్</span>
                 </a>
                 <a
                   href="https://www.instagram.com/teatime_telugu"
@@ -239,7 +221,7 @@ const GalleryShow = () => {
                   className="sn-social sn-tag box-shadow"
                 >
                   <i style={{ color: "red" }} className="fa fa-instagram"></i>
-                  <span>Instagram</span>
+                  <span>ఇన్‌స్టాగ్రామ్</span>
                 </a>
                 <a
                   href="https://www.youtube.com/@TeaTimeTelugu-s8b"
@@ -247,7 +229,7 @@ const GalleryShow = () => {
                   className="sn-social sn-tag box-shadow"
                 >
                   <i style={{ color: "red" }} className="fa fa-youtube"></i>
-                  <span>YouTube</span>
+                  <span>యూట్యూబ్</span>
                 </a>
                 <a
                   href="https://x.com/TeaTimeTelugu"
@@ -255,7 +237,7 @@ const GalleryShow = () => {
                   className="sn-social sn-tag box-shadow"
                 >
                   <i style={{ color: "#000000" }} className="fa fa-twitter"></i>
-                  <span>Twitter</span>
+                  <span>ట్విట్టర్</span>
                 </a>
               </div>
             </div>
@@ -274,7 +256,7 @@ const GalleryShow = () => {
         </div>
 
         <div className="latest-collection-container">
-          <SectionTitle title="Suggested Posts" />
+          <SectionTitle title="సూచించబడిన పోస్ట్‌లు" />
           {isLoading ? (
             <div className="latest-collection-grid">
               {Array(9)
@@ -300,25 +282,25 @@ const GalleryShow = () => {
             <div className="latest-collection-grid">
               {suggestedPosts?.slice(0, 9)?.map((collection) => (
                 <Link
-                  to={`/gallery/${collection?._id}`}
+                  to={`/gallery/${collection?.newsId}`}
                   key={collection?._id}
                   className="latest-collection-card"
-                  aria-label={`View ${collection?.title}`}
+                  aria-label={`View ${collection?.title?.en}`}
                 >
                   <div className="latest-collection-image-container">
                     <img
-                      src={collection?.galleryPics[0]?.url}
-                      alt={collection?.title}
+                      src={collection?.galleryPics[0]}
+                      alt={collection?.title?.en}
                       loading="lazy"
                       className="latest-collection-image"
                     />
                   </div>
                   <div className="latest-collection-content">
                     <span className="latest-collection-category">
-                      {collection?.category}
+                      {collection?.category?.te}
                     </span>
                     <h3 className="latest-collection-title">
-                      {collection?.title}
+                      {collection?.title?.te}
                     </h3>
                   </div>
                 </Link>
@@ -354,8 +336,8 @@ const GalleryShow = () => {
               </span>
             </div>
             <img
-              src={gallery?.galleryPics[currentImageIndex]?.url}
-              alt={gallery?.name}
+              src={gallery?.galleryPics[currentImageIndex]}
+              alt={gallery?.name?.en}
               className="popup-image"
             />
           </div>

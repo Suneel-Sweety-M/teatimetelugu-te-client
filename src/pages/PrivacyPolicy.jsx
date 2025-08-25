@@ -5,109 +5,113 @@ import Footer from "../components/footer/Footer";
 import { Link } from "react-router-dom";
 
 const PrivacyPolicy = () => {
-  document.title = "Privacy Policy";
+  document.title = "టీ టైమ్ తెలుగు గోప్యతా విధానం (Privacy Policy)";
 
   return (
     <>
       <Navbar />
       <div className="privacy-page main-page padding-page">
-        <TabTitle title={"Privacy Policy"} />
+        <TabTitle title={"గోప్యతా విధానం"} />
         <div className="privacy-container">
           <div className="privacy-section">
-            <h1>Privacy Policy</h1>
+            <h1>గోప్యతా విధానం (Privacy Policy)</h1>
             <p>
-              Tea Time Telugu is committed to protecting your privacy. This
-              Privacy Policy explains how we collect, use, and safeguard your
-              information when you use our website and services. By accessing or
-              using our services, you agree to the terms outlined in this
-              policy.
+              టీ టైమ్ తెలుగు మీ గోప్యతను కాపాడడంలో కట్టుబడి ఉంది. ఈ గోప్యతా
+              విధానం (Privacy Policy) మీరు మా వెబ్‌సైట్ మరియు సేవలను
+              ఉపయోగిస్తున్నప్పుడు మేము మీ సమాచారం ఎలా సేకరిస్తామో, ఎలా
+              ఉపయోగిస్తామో మరియు దానిని ఎలా రక్షిస్తామో వివరిస్తుంది. మా సేవలను
+              ఉపయోగించడం ద్వారా, మీరు ఈ విధానంలో పేర్కొన్న నిబంధనలకు
+              అంగీకరిస్తున్నారు.
             </p>
           </div>
           <div className="privacy-section">
-            <h2>1. Information We Collect</h2>
+            <h2>1. మేము సేకరించే సమాచారం</h2>
             <p>
-              We collect the following information when you register using
-              Google:
+              మీరు Google ద్వారా రిజిస్టర్ అయ్యేటప్పుడు మేము క్రింది సమాచారాన్ని
+              సేకరిస్తాము:
             </p>
             <ul className="pp-list">
-              <li>Full Name</li>
-              <li>Email Address</li>
-              <li>Profile Picture</li>
+              <li>పూర్తి పేరు (Full Name)</li>
+              <li>ఇమెయిల్ చిరునామా (Email Address)</li>
+              <li>ప్రొఫైల్ చిత్రం (Profile Picture)</li>
             </ul>
-            <p>This data is retrieved via Google OAuth when you sign in.</p>
+            <p>ఈ డేటా Google OAuth ద్వారా సైన్ ఇన్ చేసినప్పుడు పొందబడుతుంది.</p>
           </div>
           <div className="privacy-section">
-            <h2>2. How We Use Your Information</h2>
-            <p>We use the information collected to:</p>
+            <h2>2. మీ సమాచారం వినియోగం</h2>
+            <p>మేము సేకరించిన సమాచారాన్ని క్రింది విధాలుగా ఉపయోగిస్తాము:</p>
             <ul className="pp-list">
-              <li>Manage user login and logout functionalities.</li>
-              <li>Enable users to post comments on articles.</li>
-              <li>
-                Facilitate user interactions, including reactions to posts.
-              </li>
-              <li>Improve our website and services.</li>
+              <li>యూజర్ లాగిన్ మరియు లాగ్‌అవుట్ ఫంక్షన్లను నిర్వహించడానికి.</li>
+              <li>యూజర్లు ఆర్టికల్స్‌పై కామెంట్స్ చేయడానికి.</li>
+              <li>పోస్టులపై రియాక్షన్స్ మరియు ఇంటరాక్షన్స్ సులభం చేయడానికి.</li>
+              <li>మా వెబ్‌సైట్ మరియు సేవలను మెరుగుపరచడానికి.</li>
             </ul>
           </div>
           <div className="privacy-section">
-            <h2>3. How We Protect Your Information</h2>
+            <h2>3. మీ సమాచారం రక్షణ</h2>
             <p>
-              We take appropriate technical and organizational measures to
-              secure your data against unauthorized access, alteration,
-              disclosure, or destruction. However, no method of transmission
-              over the internet or electronic storage is 100% secure.
+              మీ డేటా అనధికార ప్రాప్తి, మార్పులు, బహిర్గతం, లేదా ధ్వంసం జరగకుండా
+              రక్షించడానికి తగిన టెక్నికల్ మరియు ఆర్గనైజేషనల్ చర్యలు మేము
+              తీసుకుంటాము. అయితే, ఇంటర్నెట్ లేదా ఎలక్ట్రానిక్ స్టోరేజ్ 100%
+              సురక్షితం కాదని గమనించాలి.
             </p>
           </div>
           <div className="privacy-section">
-            <h2>4. Sharing Your Information</h2>
+            <h2>4. మీ సమాచారం పంచుకోవడం</h2>
             <p>
-              We do not share, sell, rent, or trade your personal information
-              with any third parties.
+              మేము మీ వ్యక్తిగత సమాచారాన్ని ఎవరితోనూ పంచుకోము, అమ్మము, అద్దెకు
+              ఇవ్వము లేదా వ్యాపారం చేయము.
             </p>
           </div>
           <div className="privacy-section">
-            <h2>5. Third-Party Services</h2>
+            <h2>5. థర్డ్-పార్టీ సేవలు</h2>
             <p>
-              Our application uses Google OAuth for user authentication. Your
-              information is collected and processed by Google in accordance
-              with Google’s Privacy Policy.
+              మా అప్లికేషన్ Google OAuth ను యూజర్ ఆథెంటికేషన్ కోసం
+              ఉపయోగిస్తుంది. మీ సమాచారం Google Privacy Policy ప్రకారం Google
+              ద్వారా సేకరించబడుతుంది మరియు ప్రాసెస్ చేయబడుతుంది.
             </p>
           </div>
           <div className="privacy-section">
-            <h2>6. Your Choices</h2>
+            <h2>6. మీ ఎంపికలు</h2>
             <p>
-              You can choose not to provide us with your information by not
-              registering or logging in using Google. However, certain features
-              of our application may not be available without registration.
+              మీరు Google ద్వారా రిజిస్టర్ లేదా లాగిన్ చేయకపోవడం ద్వారా మీ
+              సమాచారాన్ని మాకు అందించకూడదని ఎంచుకోవచ్చు. అయితే, రిజిస్ట్రేషన్
+              లేకుండా మా అప్లికేషన్‌లోని కొన్ని ఫీచర్లు అందుబాటులో ఉండకపోవచ్చు.
             </p>
           </div>
           <div className="privacy-section">
-            <h2>7. Cookies and Tracking Technologies</h2>
+            <h2>7. కుకీస్ మరియు ట్రాకింగ్ టెక్నాలజీలు</h2>
             <p>
-              We may use cookies or similar technologies to enhance your
-              experience on our website. These cookies do not collect personal
-              data.
+              మా వెబ్‌సైట్‌లో మీ అనుభవాన్ని మెరుగుపరచడానికి మేము కుకీలు లేదా
+              సమానమైన టెక్నాలజీలను ఉపయోగించవచ్చు. ఈ కుకీలు వ్యక్తిగత డేటాను
+              సేకరించవు.
             </p>
           </div>
           <div className="privacy-section">
-            <h2>8. Children's Privacy</h2>
+            <h2>8. పిల్లల గోప్యత</h2>
             <p>
-              Our website is not intended for children under 13 years of age. We
-              do not knowingly collect personal information from children.
+              మా వెబ్‌సైట్ 13 సంవత్సరాల కంటే తక్కువ వయస్సు గల పిల్లల కోసం
+              ఉద్దేశించబడలేదు. మేము పిల్లల వ్యక్తిగత సమాచారాన్ని ఉద్దేశపూర్వకంగా
+              సేకరించము.
             </p>
           </div>
           <div className="privacy-section">
-            <h2>9. Changes to This Privacy Policy</h2>
+            <h2>9. గోప్యతా విధానంలో మార్పులు</h2>
             <p>
-              We reserve the right to update this Privacy Policy at any time.
-              Changes will be effective immediately upon posting to our website.
-              We encourage you to review this policy periodically.
+              ఈ Privacy Policyని ఎప్పుడైనా అప్‌డేట్ చేసే హక్కు మాకు ఉంది. ఈ
+              మార్పులు మా వెబ్‌సైట్‌లో పోస్టు చేసిన వెంటనే అమల్లోకి వస్తాయి. ఈ
+              విధానాన్ని మీరు సమయానుకూలంగా పరిశీలించాలని మేము సూచిస్తున్నాము.
             </p>
           </div>
           <div className="privacy-section">
-            <h2>10. Contact Us</h2>
+            <h2>10. మమ్మల్ని సంప్రదించండి</h2>
             <p>
-              If you have any questions or concerns about this Privacy Policy,
-              please <Link to={"/contact-us"}><span style={{color:"blue"}}>contact us</span></Link>
+              ఈ Privacy Policy గురించి మీకు ఏవైనా ప్రశ్నలు లేదా సందేహాలు ఉంటే,
+              దయచేసి మమ్మల్ని{" "}
+              <Link to={"/contact-us"}>
+                <span style={{ color: "blue" }}>సంప్రదించండి</span>
+              </Link>
+              .
             </p>
           </div>
         </div>

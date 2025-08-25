@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
   addGalleryReaction,
@@ -11,9 +11,9 @@ import {
   dislikeNewsComment,
   getNewsComments,
   likeNewsComment,
-  loginUser,
+  // loginUser,
 } from "../../helper/apis";
-import { login, addReaction, setReduxReactions } from "../../redux/userSlice";
+import { addReaction, setReduxReactions } from "../../redux/userSlice";
 import moment from "moment";
 
 const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
@@ -25,54 +25,55 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
   const [directComments, setdirectComments] = useState([]);
   const [comment, setComment] = useState("");
   const [deleteCommentId, setdeleteCommentId] = useState("");
+  const [isDeletingId, setIsDeletingId] = useState("");
   const [replyInputs, setReplyInputs] = useState({});
-  const [seePassword, setSeePassword] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [seePassword, setSeePassword] = useState(false);
+  // const [isSubmitting, setIsSubmitting] = useState(false);
   const [joinPopup, setJoinPopup] = useState(false);
-  const [isUserJoin, setIsUserJoin] = useState(true);
-  const [data, setData] = useState({
-    email: "",
-    password: "",
-  });
+  // const [isUserJoin, setIsUserJoin] = useState(true);
+  // const [data, setData] = useState({
+  //   email: "",
+  //   password: "",
+  // });
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setData({
-      ...data,
-      [name]: value,
-    });
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setData({
+  //     ...data,
+  //     [name]: value,
+  //   });
+  // };
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      const res = await loginUser(data);
+  // const onSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setIsSubmitting(true);
+  //   try {
+  //     const res = await loginUser(data);
 
-      if (res?.status === "fail") {
-        toast.error(res?.message || "Error");
-      } else if (res?.status === "success") {
-        toast.success(res?.message || "Success");
-        const newData = {
-          user: res?.user,
-        };
+  //     if (res?.status === "fail") {
+  //       toast.error(res?.message || "Error");
+  //     } else if (res?.status === "success") {
+  //       toast.success(res?.message || "Success");
+  //       const newData = {
+  //         user: res?.user,
+  //       };
 
-        dispatch(login(newData));
-        setJoinPopup(false);
-        setData({
-          email: "",
-          password: "",
-        });
-      } else {
-        toast.info(res?.message || "Info");
-      }
-      setIsSubmitting(false);
-    } catch (error) {
-      console.log(error);
-      setIsSubmitting(false);
-    }
-  };
+  //       dispatch(login(newData));
+  //       setJoinPopup(false);
+  //       setData({
+  //         email: "",
+  //         password: "",
+  //       });
+  //     } else {
+  //       toast.info(res?.message || "Info");
+  //     }
+  //     setIsSubmitting(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     setIsSubmitting(false);
+  //   }
+  // };
 
   const fetchComments = useCallback(async () => {
     try {
@@ -111,7 +112,7 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
         setJoinPopup(true);
         return;
       }
-      const res = await addNewsReaction(id, { userId: user?._id, type });
+      const res = await addNewsReaction(news?._id, { userId: user?._id, type });
       if (res?.status === "success") {
         // await getNews();
         dispatch(addReaction({ userId: user._id, type, _id: res.reactionId }));
@@ -129,7 +130,10 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
         setJoinPopup(true);
         return;
       }
-      const res = await addGalleryReaction(id, { userId: user?._id, type });
+      const res = await addGalleryReaction(news?._id, {
+        userId: user?._id,
+        type,
+      });
       if (res?.status === "success") {
         // await getNews();
         dispatch(addReaction({ userId: user._id, type, _id: res.reactionId }));
@@ -145,32 +149,32 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
     () =>
       [
         {
-          type: "Happy",
+          type: "సంతోషం",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/happy-emoji_inhxsm.png",
         },
         {
-          type: "Normal",
+          type: "సాధారణ",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/normal-emoji_gzom13.png",
         },
         {
-          type: "Amused",
+          type: "నవ్వించాడు",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/amused-emoji_urhf7o.png",
         },
         {
-          type: "Funny",
+          type: "హాస్యాస్పదం",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/funny-emoji_pxilxx.png",
         },
         {
-          type: "Angry",
+          type: "కోపం",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/angry-emoji_fowci4.png",
         },
         {
-          type: "Sad",
+          type: "దుఃఖం",
           emoji:
             "https://res.cloudinary.com/demmiusik/image/upload/v1727518078/sad-emoji_lrx7hc.png",
         },
@@ -200,7 +204,7 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
 
   const handleAddComment = async () => {
     try {
-      const res = await addNewsComment(id, { comment });
+      const res = await addNewsComment(id, { comment, language: "te" });
       if (res?.status === "success") {
         setComment("");
         fetchComments();
@@ -218,6 +222,7 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
       const res = await addNewsReplyComment(id, {
         parentCommentId,
         comment: replyText,
+        language: "te",
       });
       if (res?.status === "success") {
         fetchComments();
@@ -234,6 +239,7 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
   };
 
   const handleDeleteComment = async (commentId) => {
+    setIsDeletingId(commentId);
     try {
       const res = await deleteNewsComment(commentId);
       if (res?.status === "success") {
@@ -243,6 +249,8 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsDeletingId("");
     }
   };
 
@@ -295,8 +303,8 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
       <div className="news-comments-container">
         <div className="news-reactions-section">
           <div className="news-reactions-title">
-            <h3>What is your reaction?</h3>
-            <span>{reactionsArray?.length} votes</span>
+            <h3>మీ స్పందన ఏమిటి?</h3>
+            <span>{reactionsArray?.length} ఓట్లు</span>
           </div>
           <div className="all-reactions">
             {reactionsList.map((reaction) => (
@@ -337,15 +345,15 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
 
         <div className="comments-section">
           <div className="comments-header">
-            <h3>Comments ({commentsCount})</h3>
+            <h3>వ్యాఖ్యలు ({commentsCount})</h3>
             <button className="notification-btn">
-              <i className="fas fa-bell"></i>
+              {/* <i className="fas fa-bell"></i> */}
             </button>
           </div>
 
           <div className="comment-form">
             <textarea
-              placeholder="Write a comment..."
+              placeholder="వ్యాఖ్య రాయండి..."
               rows="3"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
@@ -353,11 +361,11 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
             <div className="form-actions">
               {user ? (
                 <button className="send-btn" onClick={handleAddComment}>
-                  Send
+                  పంపించు
                 </button>
               ) : (
                 <button className="send-btn" onClick={() => setJoinPopup(true)}>
-                  Login
+                  లాగిన్
                 </button>
               )}
             </div>
@@ -406,12 +414,20 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
                       {deleteCommentId === comment?._id &&
                         comment?.postedBy?._id === user?._id && (
                           <div className="options-menu">
-                            <button
-                              className="delete-btn"
-                              onClick={() => handleDeleteComment(comment?._id)}
-                            >
-                              <i className="fas fa-trash"></i> Delete
-                            </button>
+                            {isDeletingId !== comment?._id ? (
+                              <button
+                                className="delete-btn"
+                                onClick={() =>
+                                  handleDeleteComment(comment?._id)
+                                }
+                              >
+                                <i className="fas fa-trash"></i> Delete
+                              </button>
+                            ) : (
+                              <button className="delete-btn">
+                                Deleting...
+                              </button>
+                            )}
                           </div>
                         )}
                     </div>
@@ -532,14 +548,21 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
                                 {deleteCommentId === reply?._id &&
                                   reply?.postedBy?._id === user?._id && (
                                     <div className="options-menu">
-                                      <button
-                                        className="delete-btn"
-                                        onClick={() =>
-                                          handleDeleteComment(reply?._id)
-                                        }
-                                      >
-                                        <i className="fas fa-trash"></i> Delete
-                                      </button>
+                                      {isDeletingId !== reply?._id ? (
+                                        <button
+                                          className="delete-btn"
+                                          onClick={() =>
+                                            handleDeleteComment(reply?._id)
+                                          }
+                                        >
+                                          <i className="fas fa-trash"></i>{" "}
+                                          Delete
+                                        </button>
+                                      ) : (
+                                        <button className="delete-btn" disabled>
+                                          Deleting...
+                                        </button>
+                                      )}
                                     </div>
                                   )}
                               </div>
@@ -613,73 +636,17 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
         <div className="popup-container">
           <div className="join-popup">
             <i className="fa fa-xmark" onClick={() => setJoinPopup(false)}></i>
-            <h1>Login</h1>
-            {isUserJoin && (
-              <a
-                href={`${process.env.REACT_APP_API_URL}/auth/join-with-google`}
-                className="continue-with-google cursor-pointer"
-              >
-                <img
-                  src="https://th.bing.com/th/id/R.0fa3fe04edf6c0202970f2088edea9e7?rik=joOK76LOMJlBPw&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fgoogle-logo-png-open-2000.png&ehk=0PJJlqaIxYmJ9eOIp9mYVPA4KwkGo5Zob552JPltDMw%3d&risl=&pid=ImgRaw&r=0"
-                  alt="google-logo"
-                />
-                <h4>Continue With Google</h4>
-              </a>
-            )}
-            {!isUserJoin && (
-              <form onSubmit={onSubmit} className="singin-form">
-                <div className="join-input">
-                  <h3 className="">Email</h3>
-                  <input
-                    type="email"
-                    name="email"
-                    value={data.email}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="join-input">
-                  <h3 className="password-label">Password</h3>
-                  <i
-                    className={
-                      seePassword
-                        ? "fa fa-eye password-see-hide"
-                        : "fa fa-eye-slash password-see-hide"
-                    }
-                    onClick={() => setSeePassword(!seePassword)}
-                  ></i>
-                  <input
-                    type={seePassword ? "text" : "password"}
-                    name="password"
-                    value={data.password}
-                    onChange={handleChange}
-                  />
-                </div>
-                {!isSubmitting ? (
-                  <button type="submit" className="login-btn btn">
-                    Login
-                  </button>
-                ) : (
-                  <button
-                    type="submit"
-                    className="is-submitting-btn login-btn btn"
-                  >
-                    Submitting...
-                  </button>
-                )}
-              </form>
-            )}
-            <p className="cp" onClick={() => setIsUserJoin(!isUserJoin)}>
-              Signin as {isUserJoin ? "Writer/Admin" : "user"}
-            </p>{" "}
-            {!isUserJoin && (
-              <Link
-                to={"/forgot-password"}
-                className="cp"
-                onClick={() => setJoinPopup(false)}
-              >
-                <p>Forgot password?</p>
-              </Link>
-            )}
+            <h1>లాగిన్</h1>
+            <a
+              href={`${process.env.REACT_APP_API_URL}/auth/join-with-google?client=${process.env.REACT_APP_CLIENT_URL}`}
+              className="continue-with-google cursor-pointer"
+            >
+              <img
+                src="https://th.bing.com/th/id/R.0fa3fe04edf6c0202970f2088edea9e7?rik=joOK76LOMJlBPw&riu=http%3a%2f%2fpluspng.com%2fimg-png%2fgoogle-logo-png-open-2000.png&ehk=0PJJlqaIxYmJ9eOIp9mYVPA4KwkGo5Zob552JPltDMw%3d&risl=&pid=ImgRaw&r=0"
+                alt="google-logo"
+              />
+              <h4>Google తో కొనసాగించండి</h4>
+            </a>
           </div>
         </div>
       )}

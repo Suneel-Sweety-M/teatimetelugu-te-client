@@ -27,7 +27,7 @@ const MostViewed = () => {
 
   return (
     <div className="most-viewed-container">
-      {news?.length > 4 && <SectionTitle title="Most Viewed" />}
+      {news?.length > 4 && <SectionTitle title="అత్యంత వీక్షించబడినవి" />}
       {isLoading ? (
         <div className="most-viewed-grid">
           {Array(6)
@@ -54,24 +54,24 @@ const MostViewed = () => {
           {news?.length > 4 &&
             news?.slice(0, 6)?.map((article) => (
               <Link
-                to={`/${article?.category}/${article?._id}`}
-                key={article?._id}
+                to={`/${article?.category?.en}/${article?.newsId}`}
+                key={article?.newsId}
                 className="most-viewed-card"
-                aria-label={`Read ${article?.title}`}
+                aria-label={`Read ${article?.title?.te}`}
               >
                 <div className="most-viewed-card-image-container">
                   <img
                     src={article?.mainUrl}
-                    alt={article?.title}
+                    alt={article?.title?.te}
                     loading="lazy"
                     className="most-viewed-card-image"
                   />
                 </div>
                 <div className="most-viewed-card-content">
                   <span className="most-viewed-card-category">
-                    {article?.category}
+                    {article?.category?.te}
                   </span>
-                  <h3 className="most-viewed-card-title">{article?.title}</h3>
+                  <h3 className="most-viewed-card-title">{article?.title?.te}</h3>
                 </div>
               </Link>
             ))}

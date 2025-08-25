@@ -45,7 +45,7 @@ const CategoryPosts = () => {
       setLoading(false);
     }
   }, [category, subcategory, currentPage]);
-
+ 
   useEffect(() => {
     fetchNewsByCategory();
     window.scrollTo(0, 0);
@@ -114,7 +114,7 @@ const CategoryPosts = () => {
           {news?.length > 0 ? (
             news.map((post) => (
               <Link
-                to={`/${post?.category}/${post?._id}`}
+                to={`/${post?.category?.en}/${post?.newsId}`}
                 key={post?._id}
                 className="single-category-post box-shadow"
               >
@@ -124,20 +124,20 @@ const CategoryPosts = () => {
                       post?.mainUrl ||
                       "https://res.cloudinary.com/demmiusik/image/upload/v1729620426/post-default-pic_jbf1gl.png"
                     }
-                    alt={post.title}
+                    alt={post?.title?.en}
                   />
                 </div>
                 <div className="single-category-post-texts">
                   <span className="single-category-post-category">
-                    {post?.category} /{" "}
+                    {post?.category?.te} /{" "}
                     {moment(post?.createdAt).format("MMM DD, YYYY")}
                   </span>
-                  <h3 className="single-category-post-title">{post?.title}</h3>
+                  <h3 className="single-category-post-title">{post?.title?.te}</h3>
                 </div>
               </Link>
             ))
           ) : (
-            <p>No data found!</p>
+            <p>ఫలితాలు ఏవీ దొరకలేదు!</p>
           )}
         </div>
       )}

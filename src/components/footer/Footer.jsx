@@ -7,25 +7,22 @@ const Footer = () => {
     <div className="main-page">
       <div className="footer-log-section">
         <span className="footer-logo">
-          <img
-            src="/assets/new-ttt-logo.jpg"
-            alt="logo"
-          />
+          <img src="/assets/new-ttt-logo.jpg" alt="logo" />
         </span>
         <div className="footer-socials">
-          <Link to="/about-us">About Us</Link>
-          <Link to="/contact-us">Contact Us</Link>
-          <Link to="/privacy-policy">Privacy Policy</Link>
-          <Link to="/adwithus">Advertise With Us</Link>
+          <Link to="/about-us">మా గురించి</Link>
+          <Link to="/contact-us">మమ్మల్ని సంప్రదించండి</Link>
+          <Link to="/privacy-policy">గోప్యతా విధానం</Link>
+          <Link to="/adwithus">మాతో ప్రకటన</Link>
         </div>
       </div>
       <div className="copyright-section">
         <span className="copyright-text">
-          Copyright © 2025 All Rights Reserved by{" "}
+          కాపీరైట్ © 2025 అన్ని హక్కులు{" "}
           <a href="https://eagleiitech.com" target="blank">
-            Eagle Eye Technologies
+            ఈగిల్ ఐ టెక్నాలజీస్ (Eagle Eye Technologies)
           </a>
-          .
+          {" "}సొంతం.
         </span>
         <div className="minbar-socials">
           <a

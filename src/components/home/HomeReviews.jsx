@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import SectionTitle from "../titles/SectionTitle";
 import { Link } from "react-router-dom";
-import { getCategoryNewsPosts } from "../../helper/apis";
+import { getFilteredNews } from "../../helper/apis";
 
 const HomeReviews = () => {
   const [news, setNews] = useState([]);
@@ -10,7 +10,7 @@ const HomeReviews = () => {
   useEffect(() => {
     const fetchNewsByCategory = async () => {
       try {
-        const res = await getCategoryNewsPosts("reviews", "", 1, 4);
+        const res = await getFilteredNews("reviews", "", "", "", 1, 4); 
         if (res?.status === "success") {
           setNews(res?.news);
         }
@@ -26,20 +26,20 @@ const HomeReviews = () => {
 
   return (
     <div className="home-review-container">
-      <SectionTitle title="Reviews" nav="/reviews" />
+      <SectionTitle title="సమీక్షలు" nav="/reviews" />
       {!loading ? (
         <div className="home-review-grid">
           {news?.slice(0, 4)?.map((review) => (
             <Link
-              to={`/${review?.category}/${review?._id}`}
+              to={`/${review?.category?.en}/${review?.newsId}`}
               key={review?._id}
               className="home-review-card"
-              aria-label={`Read ${review?.title} review`}
+              aria-label={`Read ${review?.title?.te} review`}
             >
               <div className="home-review-image-container">
                 <img
                   src={review?.mainUrl}
-                  alt={review?.title}
+                  alt={review?.title?.te}
                   loading="lazy"
                   className="home-review-image"
                 />
@@ -55,7 +55,7 @@ const HomeReviews = () => {
                     />
                   ))}
                 </div>
-                <h3 className="home-review-title">{review?.title}</h3>
+                <h3 className="home-review-title">{review?.title?.te}</h3>
               </div>
             </Link>
           ))}

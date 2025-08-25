@@ -56,23 +56,23 @@ const GridView = () => {
           {news.slice(5, 11).map((movie) => (
             <article key={movie?._id} className="movie-card">
               <Link
-                to={`/${movie?.category}/${movie?._id}`}
+                to={`/${movie?.category?.en}/${movie?.newsId}`}
                 className="movie-link"
               >
                 <figure className="movie-image-container">
                   <img
                     src={movie?.mainUrl}
-                    alt={movie?.title}
+                    alt={movie?.title?.te}
                     loading="lazy"
                     className="movie-image"
                   />
                 </figure>
                 <div className="movie-content">
                   <span className="movie-meta">
-                    {movie?.category} /{" "}
+                    {movie?.category?.te} /{" "}
                     {moment(movie?.createdAt).format("MMM DD, YYYY")}
                   </span>
-                  <h3 className="movie-title">{movie?.title}</h3>
+                  <h3 className="movie-title">{movie?.title?.te}</h3>
                   {/* <p
                     className="movie-description dynamic-desc"
                     dangerouslySetInnerHTML={{
