@@ -215,6 +215,10 @@ const NewsComments = ({ news, commentsCount, setCommentsCount }) => {
   };
 
   const handleAddComment = async () => {
+    if (comment.trim() === "") {
+      toast.error("వ్యాఖ్య ఖాళీగా ఉండకూడదు");
+      return;
+    }
     try {
       const res = await addNewsComment(id, { comment, language: "te" });
       if (res?.status === "success") {

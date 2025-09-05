@@ -111,7 +111,7 @@ const ReadButton = ({ news }) => {
               <div className="icon-wrapper">
                 <i className={`fas ${isReading ? "fa-pause" : "fa-play"}`}></i>
               </div>
-              <span>{isReading ? "Pause" : isPaused ? "Resume" : "Play"}</span>
+              <span>{isReading ? "పాజ్ చేయండి" : isPaused ? "పునఃప్రారంభించు" : "చదువు"}</span>
             </div>
             <div className="wave-animation"></div>
           </button>
@@ -121,7 +121,7 @@ const ReadButton = ({ news }) => {
               <div className="icon-wrapper">
                 <i className="fas fa-stop"></i>
               </div>
-              <span>Stop</span>
+              <span>ఆపండి</span>
             </div>
           </button>
         </div>
@@ -136,7 +136,7 @@ const ReadButton = ({ news }) => {
               <i className="fas fa-volume-up"></i>
               {isLoading && <div className="loading-spinner"></div>}
             </div>
-            <span>{isLoading ? "Processing..." : "Read News"}</span>
+            <span>{isLoading ? "ప్రాసెస్ చేస్తోంది..." : "చదువు"}</span>
           </div>
         </button>
       )}
