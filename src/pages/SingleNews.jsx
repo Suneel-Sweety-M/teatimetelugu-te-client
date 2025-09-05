@@ -119,7 +119,7 @@ const SingleNews = () => {
                     dangerouslySetInnerHTML={{ __html: news?.description?.te }}
                   />
                 </div>
-                {news?.category === "reviews" && (
+                {news?.category?.en === "reviews" && (
                   <div className="single-news-rating-container">
                     <h1>టీ టైం తెలుగు రేటింగ్ :</h1>
                     {[...Array(5)].map((_, i) => (
